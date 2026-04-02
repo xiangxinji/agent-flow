@@ -1,14 +1,11 @@
-import { myAgent } from './agent';
+// DSL 核心模块
+export * from './dsl';
 
-async function main() {
-  console.log('Starting Mastra Agent...');
-  
-  try {
-    const response = await myAgent.generate('Hello, can you introduce yourself?');
-    console.log('Agent response:', response.text);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
+// 适配器模块
+export * from './adapters';
 
-main();
+// 导出工厂实例
+export { AdapterFactory } from './adapters/factory/AdapterFactory';
+
+// 导出编译器
+export { MastraCompiler } from './dsl/compiler/MastraCompiler';

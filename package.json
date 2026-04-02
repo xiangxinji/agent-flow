@@ -2,16 +2,30 @@
   "name": "agentflow",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node src/examples/basic-usage.ts",
+    "dev:three-node": "ts-node src/examples/three-node-linear-flow.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type-check": "tsc --noEmit"
   },
-  "keywords": [],
+  "keywords": [
+    "agent",
+    "workflow",
+    "router",
+    "planner",
+    "executor",
+    "dsl",
+    "mastra"
+  ],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "三层架构工作流引擎 - Router -> Planner -> Executor",
+  "dependencies": {
+    "@mastra/core": "^0.5.0"
+  },
   "devDependencies": {
     "@types/node": "^25.5.0",
     "ts-node": "^10.9.2",
