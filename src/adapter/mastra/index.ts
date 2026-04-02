@@ -1,5 +1,5 @@
 import { MasterWorkflow } from "../../interface/workflow";
-import { MastraAdapterWorkflowInstance } from "./workflow";
+import { MastraAdapterWorkflowInstance } from "./workflow/workflow";
 
 export class MastraWorkflowAdapter {
     private instance: MastraAdapterWorkflowInstance;
@@ -8,11 +8,4 @@ export class MastraWorkflowAdapter {
         this.instance = new MastraAdapterWorkflowInstance(this.json);
     }
 
-    private buildNodes () {
-
-    }
-
-    public build () {
-        this.buildNodes();
-    }
 }
