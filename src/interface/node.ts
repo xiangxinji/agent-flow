@@ -105,3 +105,6 @@ export interface ParallelNode extends BaseNode {
 
 // 统一的节点类型
 export type WorkflowNode = ExecutionNode | BranchNode | IteratorNode | SubGraphNode | ParallelNode;
+
+
+export type HasNextNode = ExecutionNode | IteratorNode | SubGraphNode | ParallelNode;

@@ -1,9 +1,11 @@
-import { WorkflowNode, ExecutionNode, BranchNode, IteratorNode, SubGraphNode, ParallelNode } from "../../../interface/node";
-import { InstanceContext } from "./index";
-
+import { WorkflowNode, ExecutionNode, BranchNode, IteratorNode, SubGraphNode, ParallelNode, HasNextNode } from "../../../interface/node";
+import { createStep } from "@mastra/core/workflows";
+import { z } from "zod";
+import type { WorkflowInstance } from "../../instance";
 export class MastraAdapterWorkflowStep {
-    constructor(private context: InstanceContext , private node: WorkflowNode, ) {
-
+    id: string;
+    constructor(private context: { workflow: WorkflowInstance }, public node: WorkflowNode,) {
+        this.id = this.node.id;
     }
 
     /**
@@ -16,7 +18,7 @@ export class MastraAdapterWorkflowStep {
     /**
      * 判断是否为分支节点
      */
-    private isBranchNode() {
+    isBranchNode() {
         return this.node.type === 'branch';
     }
 
@@ -37,15 +39,29 @@ export class MastraAdapterWorkflowStep {
     /**
      * 判断是否为并行节点
      */
-    private isParallelNode() {
+    isParallelNode() {
         return this.node.type === 'parallel';
     }
 
-
-    public build () {
-        return () => {
-            
-        }
+    hasNext () {
+        return (this.node as HasNextNode)?.next !== undefined;
     }
-  
+
+
+    /**
+     * 构建节点
+     * @returns 
+     */
+    public build() {
+        return createStep({
+            id: this.node.id,
+            description: 'node_' + this.node.id,
+            inputSchema: z.object({}),
+            outputSchema: z.object({}),
+            execute: async (input) => {
+                return input;
+            }
+        });
+    }
+
 }
