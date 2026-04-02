@@ -41,7 +41,7 @@ export interface ExecutionNode extends BaseNode {
     /**
      * 静态连接：下一步去哪（简单 DAG）
      */
-    next?: string | string[];
+    next?: string
 
 
     // --- 生命周期钩子 ---
@@ -49,6 +49,8 @@ export interface ExecutionNode extends BaseNode {
         onBefore?: string; // 执行前的预处理脚本或函数名
         onAfter?: string;  // 执行后的后处理
     };
+
+    catch?: string; // 异常处理节点 ID
 }
 
 
@@ -71,5 +73,35 @@ export interface IteratorNode extends BaseNode {
     next: string;          // 整个循环彻底结束后的下一步
 }
 
+// 子工作流
+export interface SubGraphNode extends BaseNode {
+    type: 'subgraph';
+
+    // 内嵌一个完整的子工作流
+    workflow: {
+        nodes: WorkflowNode[];
+        startNodeId: string;
+    };
+
+    next: string;
+}
+
+
+// ==========================================
+// 4. 并行节点 (控制流驱动的显式分叉)
+// ==========================================
+export interface ParallelNode extends BaseNode {
+    type: 'parallel';
+
+    // 1. 并发分支：在这里显式声明你要同时跑哪几个节点
+    // 依然没有破坏 ExecutionNode 的单出规则，只有 ParallelNode 拥有分叉能力
+    branches: Array<{
+        target: string; // 目标节点 ID (例如：'NodeB', 'NodeC')
+    }>;
+
+    // 2. AND 聚合：当 branches 里的所有链路彻底执行完后，下一步去哪
+    next: string;
+}
+
 // 统一的节点类型
-export type WorkflowNode = ExecutionNode | BranchNode | IteratorNode;
+export type WorkflowNode = ExecutionNode | BranchNode | IteratorNode | SubGraphNode | ParallelNode;
