@@ -19,10 +19,7 @@ const testWorkflow = {
         "label": "开始节点"
       },
       "input": {
-        "message": {
-          "type": "constant",
-          "value": "Hello World"
-        }
+     
       },
       "executor": {
         "type": "function",
@@ -161,5 +158,5 @@ const testWorkflow = {
 
 const adapter = new MastraWorkflowAdapter(testWorkflow as any );
 
-console.log('测试工作流创建成功:', adapter);
+adapter.instance.run();
 

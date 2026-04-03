@@ -2,6 +2,8 @@ import { WorkflowNode, ExecutionNode, BranchNode, IteratorNode, SubGraphNode, Pa
 import { createStep } from "@mastra/core/workflows";
 import { z } from "zod";
 import type { WorkflowInstance } from "../../instance";
+
+let num = 1;
 export class MastraAdapterWorkflowStep {
     id: string;
     constructor(private context: { workflow: WorkflowInstance }, public node: WorkflowNode,) {
@@ -52,14 +54,16 @@ export class MastraAdapterWorkflowStep {
      * 构建节点
      * @returns 
      */
-    public build() {
+    public create() {
         return createStep({
             id: this.node.id,
             description: 'node_' + this.node.id,
             inputSchema: z.object({}),
             outputSchema: z.object({}),
             execute: async (input) => {
-                return input;
+                console.log('===' + num++ + '===' , this.node.id );
+                
+                return input as any;
             }
         });
     }

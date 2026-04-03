@@ -1,6 +1,6 @@
 import { type Workflow } from "@mastra/core/workflows";
 import { createWorkflow } from "@mastra/core/workflows";
-import { z } from "zod";
+import { pipe, z } from "zod";
 
 import {
   BranchNode,
@@ -12,181 +12,154 @@ import { isBranchNode, isParallelNode } from "../../../utils/is";
 import { WorkflowInstance } from "../../instance";
 import { MastraAdapterWorkflowStep } from "./step";
 
+
 /**
  * 工业级 DSL → Mastra Workflow 编译器
  */
 export class MastraAdapterWorkflowInstance extends WorkflowInstance {
   private json: MasterWorkflow;
-
-  // 所有 step 实例（唯一）
-  private stepMap: Map<string, any> = new Map();
-
-  // 邻接表（DAG）
-  private adjacency: Map<string, string[]> = new Map();
-
-  // 入度（拓扑排序用）
-  private indegree: Map<string, number> = new Map();
-
+  private steps: MastraAdapterWorkflowStep[] = [];
   private workflow!: Workflow;
 
   constructor(json: MasterWorkflow) {
     super();
-
     this.json = json;
-    // this.init();
+    this.init();
   }
+
 
   private init() {
-    this.buildSteps();
-    this.buildGraph();
-    this.buildWorkflow();
+    this.steps = this.json.nodes.map((node) => new MastraAdapterWorkflowStep({ workflow: this }, node));
+  }
+
+
+  get stepMap() {
+    return this.steps.reduce((acc, step) => {
+      acc[step.id] = step;
+      return acc;
+    }, {} as Record<string, MastraAdapterWorkflowStep>);
+  }
+  /**
+     * 核心构建方法：自底向上返回一个已 commit 的可执行单元（Step 或 Workflow）
+     * 这种模式天然适配 Mastra 的嵌套逻辑，且不会爆栈。
+     */
+  public buildStep(stepNode?: MastraAdapterWorkflowStep): any {
+    if (!stepNode) return null;
+
+    const stepInstance = stepNode.create();
+    const nextNodeId = (stepNode.node as any)?.next;
+
+    // --- 1. 处理分支节点 (Branch Node) ---
+    if (stepNode.isBranchNode()) {
+      const branchNode = stepNode.node as BranchNode;
+
+      const flows = branchNode.cases.map(branch => {
+        // 🚨 修复闭包陷阱：将 expression 固化在当前作用域
+        const currentExpr = branch.expression;
+
+        // 递归构建分支后续的所有逻辑单元
+        const branchChain = this.buildStep(this.stepMap[branch.target]);
+
+        return [
+          async ({ context }: any) => {
+            // 🚨 动态求值：根据 context 判断当前分支是否命中
+            return this.evaluateExpression(currentExpr, context);
+          },
+          branchChain // 这里是一个已 commit 的 Workflow 或 Step
+        ];
+      });
+
+      // 处理 default 兜底逻辑
+      if (branchNode.default) {
+        const defaultChain = this.buildStep(this.stepMap[branchNode.default]);
+        flows.push([async () => true, defaultChain]);
+      }
+
+      // 封装为嵌套 Workflow：先执行自己，再进行分支
+      return createWorkflow({
+        id: `branch-wrapper-${stepNode.id}`,
+        inputSchema: z.any(), // 允许透传数据
+        outputSchema: z.any()
+      })
+        .then(stepInstance)
+        .branch(flows as any)
+        .commit();
+    }
+
+    // --- 2. 处理并行节点 (Parallel Node) ---
+    else if (stepNode.isParallelNode()) {
+      const parallelNode = stepNode.node as ParallelNode;
+
+      // 递归构建所有并行的子分支链路
+      const flows = parallelNode.branches.map(branch =>
+        this.buildStep(this.stepMap[branch.target])
+      ).filter(Boolean);
+
+      // 封装为嵌套 Workflow：先执行自己，再并发执行分支
+      const parallelWrapper = createWorkflow({
+        id: `parallel-wrapper-${stepNode.id}`,
+        inputSchema: z.any(),
+        outputSchema: z.any()
+      })
+        .then(stepInstance)
+        .parallel(flows)
+        .commit();
+
+      // 如果并行块后面还有后续节点，需要接续
+      if (nextNodeId && this.stepMap[nextNodeId]) {
+        const afterChain = this.buildStep(this.stepMap[nextNodeId]);
+        return createWorkflow({ id: `para-and-after-${stepNode.id}`, inputSchema: z.any(), outputSchema: z.any() })
+          .then(parallelWrapper)
+          .then(afterChain)
+          .commit();
+      }
+
+      return parallelWrapper;
+    }
+
+    // --- 3. 处理普通串行节点 ---
+    else {
+      // 如果后面还有节点，将当前 Step 与后续所有逻辑打包成一个 Workflow
+      if (nextNodeId && this.stepMap[nextNodeId]) {
+        const nextChain = this.buildStep(this.stepMap[nextNodeId]);
+
+        return createWorkflow({ id: `seq-chain-${stepNode.id}`, inputSchema: z.any(), outputSchema: z.any() })
+          .then(stepInstance)
+          .then(nextChain)
+          .commit();
+      }
+
+      // 孤立的末端节点，直接返回实例
+      return stepInstance;
+    }
   }
 
   /**
-   * Step 只构建一次
+   * 表达式计算逻辑 (需根据你的 DSL 语法实现)
    */
-  private buildSteps() {
-    this.json.nodes.forEach((node) => {
-      const wrapper = new MastraAdapterWorkflowStep(
-        { workflow: this },
-        node
-      );
-      this.stepMap.set(node.id, wrapper.build());
+  private evaluateExpression(expression: string, context: any): boolean {
+    // 示例：判断上一步输出的 status 是否匹配
+    // return context.steps['previous-step-id']?.status === expression;
+    return expression === 'true';
+  }
+
+  /**
+   * 编译器入口
+   */
+  public compile(startNodeId: string) {
+    const rootNode = this.stepMap[startNodeId];
+    const executable = this.buildStep(rootNode);
+
+    return createWorkflow({ id: 'main-app-workflow', inputSchema: z.any(), outputSchema: z.any() })
+      .then(executable)
+      .commit();
+  }
+
+  async run() {
+    const workflow = this.compile(this.json.startNodeId);
+    const runner = workflow.createRun();
+    await (await runner).start({
+      inputData : {}
     });
-  }
-
-  /**
-   * 构建 DAG（邻接表 + 入度）
-   */
-  private buildGraph() {
-    // init
-    this.json.nodes.forEach((node) => {
-      this.adjacency.set(node.id, []);
-      this.indegree.set(node.id, 0);
-    });
-
-    for (const node of this.json.nodes) {
-      if (isBranchNode(node)) {
-        for (const c of (node as BranchNode).cases) {
-          if (c.target) this.addEdge(node.id, c.target);
-        }
-      } else if (isParallelNode(node)) {
-        for (const b of (node as ParallelNode).branches) {
-          this.addEdge(node.id, b.target);
-        }
-        if ((node as ParallelNode).next) {
-          // parallel 汇合点
-          this.addEdge(node.id, (node as ParallelNode).next);
-        }
-      } else {
-        const n = node as ExecutionNode;
-        if (n.next) this.addEdge(node.id, n.next);
-      }
-    }
-  }
-
-  private addEdge(from: string, to: string) {
-    this.adjacency.get(from)!.push(to);
-    this.indegree.set(to, (this.indegree.get(to) || 0) + 1);
-  }
-
-  /**
-   * 拓扑排序（Kahn）
-   */
-  private topoSort(): string[] {
-    const queue: string[] = [];
-    const indegree = new Map(this.indegree);
-
-    for (const [id, deg] of indegree) {
-      if (deg === 0) queue.push(id);
-    }
-
-    const result: string[] = [];
-
-    while (queue.length) {
-      const cur = queue.shift()!;
-      result.push(cur);
-
-      for (const next of this.adjacency.get(cur) || []) {
-        indegree.set(next, indegree.get(next)! - 1);
-        if (indegree.get(next) === 0) {
-          queue.push(next);
-        }
-      }
-    }
-
-    if (result.length !== this.json.nodes.length) {
-      throw new Error("Workflow contains cycle (Mastra 不支持)");
-    }
-
-    return result;
-  }
-
-  /**
-   * 构建 Mastra Workflow（核心）
-   */
-  private buildWorkflow() {
-    this.workflow = createWorkflow({
-      id: this.json.id || "workflow_runner",
-      inputSchema: z.record(z.any()),
-      outputSchema: z.record(z.any()),
-    });
-
-    const order = this.topoSort();
-
-
-    let pipe: any = this.workflow;
-
-    for (const nodeId of order) {
-      const rawNode = this.json.nodes.find((n) => n.id === nodeId)!;
-
-      // ===== 1. 普通节点 =====
-      if (!isBranchNode(rawNode) && !isParallelNode(rawNode)) {
-        const step = this.stepMap.get(nodeId);
-        pipe = pipe.then(step);
-      }
-
-      // ===== 2. Branch =====
-      else if (isBranchNode(rawNode)) {
-        const node = rawNode as BranchNode;
-
-        const branchConditions = node.cases
-          .filter((c) => c.target)
-          .map((c) => {
-            const conditionFn = async (ctx: any) => {
-              // ⚠️ 你需要替换成真实表达式执行
-              return true;
-            };
-
-            const step = this.stepMap.get(c.target!);
-            return [conditionFn, step];
-          });
-
-        pipe = pipe.branch(...branchConditions);
-      }
-
-      // ===== 3. Parallel =====
-      else if (isParallelNode(rawNode)) {
-        const node = rawNode as ParallelNode;
-
-        const steps = node.branches
-          .map((b) => this.stepMap.get(b.target))
-          .filter(Boolean);
-
-        pipe = pipe.parallel(steps);
-
-        // 汇合点
-        if (node.next) {
-          const nextStep = this.stepMap.get(node.next);
-          pipe = pipe.then(nextStep);
-        }
-      }
-    }
-
-    // ✅ 最终 commit（只一次）
-    this.workflow = pipe.commit();
-  }
-
-  run() {
   }
 }
