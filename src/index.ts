@@ -1,4 +1,5 @@
-import { MastraWorkflowAdapter } from "./adapter/mastra";
+import { MastraWorkflowAdapter } from "@/core/adapter/mastra";
+import { WorkflowContext } from "./core/workflow/context";
 
 const testWorkflow = {
   "id": "test-workflow-1",
@@ -19,7 +20,7 @@ const testWorkflow = {
         "label": "开始节点"
       },
       "input": {
-     
+
       },
       "executor": {
         "type": "function",
@@ -156,7 +157,18 @@ const testWorkflow = {
   ]
 };
 
-const adapter = new MastraWorkflowAdapter(testWorkflow as any );
 
-adapter.instance.run();
+async function main() {
+  const adapter = new MastraWorkflowAdapter(testWorkflow as any);
+  const context = new WorkflowContext();
+  const workflow = adapter.compile(context);
+
+  const run = await workflow.createRun();
+
+  run.start({ inputData: {} })
+}
+
+
+main();
+
 
