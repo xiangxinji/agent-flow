@@ -4,7 +4,7 @@ import { ExecutorNode } from "../workflow/node/executor";
 import { BranchNode } from "../workflow/node/branch";
 import { IteratorNode } from "../workflow/node/iterator";
 import { ParallelNode } from "../workflow/node/parallel";
-import { SubGraphNode } from "../workflow/node/sub-graph";
+import { SubGraphNode } from "../workflow/node/subgraph";
 import { ExecutorFactory } from "./executor-factory";
 
 export class NodeFactory {
