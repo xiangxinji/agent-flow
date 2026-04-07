@@ -1,4 +1,4 @@
-import { EngineContext } from "../engine";
+import { EngineContext, Input } from "../engine";
 import { BaseNode, NodeConfig } from "./base";
 
 export type SubGraphNodeConfig = Omit<NodeConfig & {
@@ -10,7 +10,7 @@ export class SubGraphNode extends BaseNode {
         super({ ...config, type: 'subgraph' });
     }
     
-    whenExecute(node: BaseNode, ctx: EngineContext): Promise<any> {
+    onExecute(input: Input, ctx: EngineContext): Promise<any> {
         throw new Error("Method not implemented.");
     }
 }

@@ -1,4 +1,4 @@
-import { EngineContext } from "../engine";
+import { EngineContext, Input } from "../engine";
 import { BaseExecutor } from "../executor/base";
 import { BaseNode, NodeConfig } from "./base";
 
@@ -17,10 +17,10 @@ export class ExecutorNode extends BaseNode {
         this.executor = config.executor;
     }
 
-    async whenExecute(node: ExecutorNode , ctx: EngineContext) {
-        await this.executor.execute(node);
+    async onExecute(input: Input, ctx: EngineContext) {
+        const output = await this.executor.execute(this , input);
         if (this.next) {
-            await ctx.engine.runNode(this.next);
+            await ctx.engine.runNode(this.next, output);
         }
     }
 }

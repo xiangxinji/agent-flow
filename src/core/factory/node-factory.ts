@@ -16,7 +16,8 @@ export class NodeFactory {
     static create(node: Node): BaseNode {
         const id = node.id;
         const metadata = node.metadata || {};
-        const base = { id, metadata };
+        const attrs = node.attrs || {};
+        const base = { id, metadata, attrs };
         if ((['agent' , 'function-call'] as GraphNodeType[]).includes(node.type as GraphNodeType)) {
             return new ExecutorNode({ ...base , executor : ExecutorFactory.create(node.type  as GraphNodeType) });
         } else if (node.type === 'branch') {

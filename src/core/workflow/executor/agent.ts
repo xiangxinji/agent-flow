@@ -14,6 +14,6 @@ export class AgentExecutor extends BaseExecutor {
     }
     
     async execute(node: ExecutorNode) {
-        
+        return {};
     }
 }

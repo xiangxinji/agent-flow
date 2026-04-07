@@ -28,7 +28,9 @@ async function main() {
   });
   const workflow = builder.build();
   const engine = new WorkflowEngine(workflow);
-  await engine.run();
+  await engine.run({
+    name : '張三'
+  });
 }
 
 main();

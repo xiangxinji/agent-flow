@@ -1,6 +1,7 @@
 
 import { ExecutorNode } from "../node/executor";
 import type { ExecutorType } from "../../../interface/flow/executor";
+import { Input } from "../engine";
 
 export type BaseExecutorConfig = {
     type : ExecutorType
@@ -13,5 +14,5 @@ export abstract class BaseExecutor {
         this.type = type;
     }
 
-    abstract execute(node: ExecutorNode): Promise<void>;
+    abstract execute(node: ExecutorNode , input: Input): Promise<Record<string, any>>;
 }

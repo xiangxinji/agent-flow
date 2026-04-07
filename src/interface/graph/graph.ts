@@ -19,6 +19,7 @@ export interface Node {
     id: string
     type: GraphNodeType
     metadata ?: Record<string, any>
+    attrs ?: Record<string, any>
 
 }
 

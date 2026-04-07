@@ -1,40 +1,44 @@
 
 import { Workflow } from "../workflow";
+import { BaseNode } from "./node/base";
 
 
+
+
+export type Input = Record<string, any>;
 
 export type EngineContext = {
-    engine : WorkflowEngine
+    engine: WorkflowEngine
+    node: BaseNode
 }
 
 
 export class WorkflowEngine {
- 
-    constructor (private workflow: Workflow) {
-        
-    }
 
-    public async runNode (nodeId: string) {
-        if(!nodeId) {
+    constructor(private workflow: Workflow) { }
+
+    public async runNode(id: string, input: Input = {}) {
+        if (!id) {
             return;
         }
-        
-        const node = this.workflow.getNode(nodeId);
+        const node = this.workflow.getNode(id);
         if (!node) {
-            throw new Error(`Node ${nodeId} not found`);
+            throw new Error(`Node ${id} not found`);
         }
-        
+
         const context: EngineContext = {
-            engine : this 
+            engine: this,
+            node: node,
         };
-        await node.whenExecute(node , context);
+         await node.onExecute(input, context);
+
     }
 
-    public async run() {
+    public async run(input : Input = {}) {
         const root = this.workflow.getNode(this.workflow.root);
         if (!root) {
             throw new Error(`Root node ${this.workflow.root} not found`);
         }
-        await this.runNode(this.workflow.root);
+        return await this.runNode(this.workflow.root, input);
     }
 }

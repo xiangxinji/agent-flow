@@ -1,17 +1,19 @@
 import { NodeType } from "@/interface/flow/node";
-import { EngineContext } from "../engine";
+import { EngineContext, Input } from "../engine";
 
 export abstract class BaseNode {
     id: string;
     metadata?: Record<string, any>;
     type: NodeType;
-    constructor({ id, type, metadata }: NodeConfig) {
+    attrs?: Record<string, any>;
+    constructor({ id, type, metadata, attrs }: NodeConfig) {
         this.id = id;
         this.type = type;
         this.metadata = metadata;
+        this.attrs = attrs;
     }
 
-    abstract whenExecute (node: BaseNode, ctx : EngineContext): Promise<any>;
+    abstract onExecute (input: Input, ctx : EngineContext): Promise<any>;
 }
 
 
@@ -19,4 +21,5 @@ export type NodeConfig = {
     id: string;
     type: NodeType;
     metadata?: Record<string, any>;
+    attrs?: Record<string, any>;
 }
