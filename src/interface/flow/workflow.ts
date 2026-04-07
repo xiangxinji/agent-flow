@@ -1,6 +1,6 @@
 import { WorkflowNode } from "./node";
 
-export interface MasterWorkflow {
+export interface Workflow {
     // ==========================================
     // 1. 元数据 (Metadata)
     // ==========================================

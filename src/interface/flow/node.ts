@@ -1,4 +1,4 @@
-export type NodeType = 'execution' | ''
+export type NodeType = 'executor' | 'branch' | 'iterator' | 'subgraph' | 'parallel'
 
 import { AgentExecutor, FunctionExecutor } from './executor';
 import { InputSource } from './input';
@@ -6,11 +6,10 @@ import { ExecutionPolicy } from './policy';
 
 
 // 基础节点属性 (所有节点共有)
-interface BaseNode {
+export interface BaseNode {
     id: string;
     metadata?: {
-        x: number; y: number; // UI 坐标
-        label: string;
+
     };
 }
 
@@ -55,7 +54,7 @@ export interface ExecutionNode extends BaseNode {
 
 
 export interface BranchNode extends BaseNode {
-    type: 'branch';
+    type: NodeType;
     source: string; // 数据源路径，如 "$.steps.prev.output"
     cases: Array<{
         expression: string; // 判断条件，如 "== 'success'"
@@ -67,7 +66,7 @@ export interface BranchNode extends BaseNode {
 
 // 3. 循环节点（你提议加的这个，完美！）
 export interface IteratorNode extends BaseNode {
-    type: 'iterator';
+    type: NodeType;
     items: string;         // 循环的数组源
     loopNodeId: string;    // 循环体指向的节点
     next: string;          // 整个循环彻底结束后的下一步
@@ -75,8 +74,7 @@ export interface IteratorNode extends BaseNode {
 
 // 子工作流
 export interface SubGraphNode extends BaseNode {
-    type: 'subgraph';
-
+    type: NodeType;
     // 内嵌一个完整的子工作流
     workflow: {
         nodes: WorkflowNode[];
@@ -91,7 +89,7 @@ export interface SubGraphNode extends BaseNode {
 // 4. 并行节点 (控制流驱动的显式分叉)
 // ==========================================
 export interface ParallelNode extends BaseNode {
-    type: 'parallel';
+    type: NodeType;
 
     // 1. 并发分支：在这里显式声明你要同时跑哪几个节点
     // 依然没有破坏 ExecutionNode 的单出规则，只有 ParallelNode 拥有分叉能力
