@@ -2,6 +2,7 @@
 
 
 import { ExecutorNode } from "../node/executor";
+import { Input } from "../../../workflow-engine/workflow";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
 
 type AgentExecutorConfig = Omit<{
@@ -13,7 +14,7 @@ export class AgentExecutor extends BaseExecutor {
         super({ ...config, type: 'agent' });
     }
     
-    async execute(node: ExecutorNode) {
+    async execute(node: ExecutorNode, input: Input) {
         return {};
     }
 }

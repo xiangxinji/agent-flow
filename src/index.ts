@@ -1,5 +1,5 @@
 import { GraphBuilder } from "./core/graph/builder";
-import { WorkflowEngine } from "./core/workflow/engine";
+import { WorkflowEngine } from "./workflow-engine/workflow";
 
 
 
@@ -29,7 +29,7 @@ async function main() {
   const workflow = builder.build();
   const engine = new WorkflowEngine(workflow);
   await engine.run({
-    name : '張三'
+    prompt : '你好'
   });
 }
 

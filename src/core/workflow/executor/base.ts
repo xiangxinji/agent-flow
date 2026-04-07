@@ -1,7 +1,7 @@
 
 import { ExecutorNode } from "../node/executor";
 import type { ExecutorType } from "../../../interface/flow/executor";
-import { Input } from "../engine";
+import { Input } from "../../../workflow-engine/workflow";
 
 export type BaseExecutorConfig = {
     type : ExecutorType

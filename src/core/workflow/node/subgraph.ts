@@ -1,4 +1,4 @@
-import { EngineContext, Input } from "../engine";
+import { EngineContext, Input } from "../../../workflow-engine/workflow";
 import { BaseNode, NodeConfig } from "./base";
 
 export type SubGraphNodeConfig = Omit<NodeConfig & {

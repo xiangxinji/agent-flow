@@ -1,7 +1,7 @@
 
 
 
-import { Input } from "../engine";
+import { Input } from "../../../workflow-engine/workflow";
 import { ExecutorNode } from "../node/executor";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
 

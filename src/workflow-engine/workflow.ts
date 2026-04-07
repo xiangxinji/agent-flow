@@ -1,6 +1,7 @@
 
-import { Workflow } from "../workflow";
-import { BaseNode } from "./node/base";
+import { EngineState } from "./state";
+import { Workflow } from "../core/workflow";
+import { BaseNode } from "../core/workflow/node/base";
 
 
 
@@ -10,12 +11,16 @@ export type Input = Record<string, any>;
 export type EngineContext = {
     engine: WorkflowEngine
     node: BaseNode
+    state: EngineState
 }
-
 
 export class WorkflowEngine {
 
-    constructor(private workflow: Workflow) { }
+    state : EngineState 
+
+    constructor(private workflow: Workflow) { 
+        this.state = new EngineState();
+    }
 
     public async runNode(id: string, input: Input = {}) {
         if (!id) {
@@ -29,6 +34,7 @@ export class WorkflowEngine {
         const context: EngineContext = {
             engine: this,
             node: node,
+            state: this.state,
         };
          await node.onExecute(input, context);
 
@@ -39,6 +45,8 @@ export class WorkflowEngine {
         if (!root) {
             throw new Error(`Root node ${this.workflow.root} not found`);
         }
+
+        this.state.allSet(input);
         return await this.runNode(this.workflow.root, input);
     }
 }
