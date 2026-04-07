@@ -1,10 +1,11 @@
-import { BaseNode } from "./node/base";
-import { Node } from "@/interface/graph/graph";
-import { ExecutorNode } from "./node/executor";
-import { BranchNode } from "./node/branch";
-import { IteratorNode } from "./node/iterator";
-import { ParallelNode } from "./node/parallel";
-import { SubGraphNode } from "./node/sub-graph";
+import { BaseNode } from "../workflow/node/base";
+import { GraphNodeType, Node } from "@/interface/graph/graph";
+import { ExecutorNode } from "../workflow/node/executor";
+import { BranchNode } from "../workflow/node/branch";
+import { IteratorNode } from "../workflow/node/iterator";
+import { ParallelNode } from "../workflow/node/parallel";
+import { SubGraphNode } from "../workflow/node/sub-graph";
+import { ExecutorFactory } from "./executor-factory";
 
 export class NodeFactory {
     /**
@@ -16,8 +17,8 @@ export class NodeFactory {
         const id = node.id;
         const metadata = node.metadata || {};
         const base = { id, metadata };
-        if (node.type === 'executor') {
-            return new ExecutorNode({ ...base });
+        if ((['agent' , 'function-call'] as GraphNodeType[]).includes(node.type as GraphNodeType)) {
+            return new ExecutorNode({ ...base , executor : ExecutorFactory.create(node.type  as GraphNodeType) });
         } else if (node.type === 'branch') {
             return new BranchNode({ ...base });
         } else if (node.type === 'iterator') {

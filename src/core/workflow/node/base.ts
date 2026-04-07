@@ -1,4 +1,5 @@
 import { NodeType } from "@/interface/flow/node";
+import { EngineContext } from "../engine";
 
 export abstract class BaseNode {
     id: string;
@@ -9,6 +10,8 @@ export abstract class BaseNode {
         this.type = type;
         this.metadata = metadata;
     }
+
+    abstract whenExecute (node: BaseNode, ctx : EngineContext): Promise<any>;
 }
 
 

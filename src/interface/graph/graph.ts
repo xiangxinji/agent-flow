@@ -1,5 +1,8 @@
-import { NodeType } from "../flow/node"
 
+/**
+ * 前端配置的节点类型
+ */
+export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'subgraph' | 'function-call'
 export interface Flow {
     id: string
     name: string
@@ -14,7 +17,7 @@ export interface Flow {
 
 export interface Node {
     id: string
-    type: NodeType
+    type: GraphNodeType
     metadata ?: Record<string, any>
 
 }

@@ -1,7 +1,7 @@
 import { Flow, Node } from "@/interface/graph/graph";
 import { Workflow } from "../workflow";
 import { BaseNode } from "../workflow/node/base";
-import { NodeFactory } from "../workflow/node-factory";
+import { NodeFactory } from "../factory/node-factory";
 
 export class GraphBuilder {
     private nodeMap: Map<string, BaseNode> = new Map();

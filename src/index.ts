@@ -11,11 +11,11 @@ async function main() {
     nodes: [
       {
         id: "test-1",
-        type: "executor"
+        type: "function-call"
       },
       {
         id: "test-2",
-        type: "executor"
+        type: "function-call"
       }
     ],
     edges: [

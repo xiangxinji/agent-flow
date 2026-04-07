@@ -1,3 +1,5 @@
+export type ExecutorType = 'agent' | 'function-call';
+
 // Agent 执行器
 export interface AgentExecutor {
   type: 'agent';
