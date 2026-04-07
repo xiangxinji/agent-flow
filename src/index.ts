@@ -1,4 +1,5 @@
 import { GraphBuilder } from "./core/graph/builder";
+import { EngineEvent } from "./enums/engine";
 import { ParallelNode } from "./interface/graph/graph";
 import { WorkflowEngine } from "./workflow-engine";
 
@@ -37,6 +38,10 @@ async function main() {
       {
         id: 'test-6',
         type: 'function-call'
+      },
+      {
+        id: 'test-7',
+        type: 'function-call'
       }
     ],
     edges: [
@@ -59,6 +64,10 @@ async function main() {
       {
         from: 'test-3',
         to: 'test-6'
+      },
+      {
+        from: 'test-6',
+        to: 'test-7'
       }
     ],
     root: "test-1"
@@ -66,6 +75,11 @@ async function main() {
   const workflow = builder.build();
 
   const engine = new WorkflowEngine(workflow);
+
+  engine.event.on(EngineEvent.WORKFLOW_RUNNING, () => {
+    console.log('workflow running');
+  });
+
   await engine.run({
     prompt: '你好'
   });

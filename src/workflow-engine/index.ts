@@ -3,6 +3,8 @@ import { EngineState } from "./state";
 import { Workflow } from "../core/workflow";
 import { BaseNode } from "../core/workflow/node/base";
 import { WorkflowHistory } from "./history";
+import { EventManager } from "@/utils/event-manager";
+import { EngineEvent } from "@/enums/engine";
 
 
 
@@ -21,6 +23,8 @@ export class WorkflowEngine {
 
     public history?: WorkflowHistory
 
+    public event = new EventManager();
+
     constructor(public workflow: Workflow, { history } = { history: true }) {
         this.state = new EngineState();
         if (history) {
@@ -36,8 +40,6 @@ export class WorkflowEngine {
      */
     public async runNode(id: string, input: Input = {}) {
 
-        console.log(id , input );
-        
         if (!id) {
             return;
         }
@@ -53,8 +55,10 @@ export class WorkflowEngine {
             state: this.state,
         };
         this.history?.put('execute-before', { nodeId: id, input });
+        this.event.emit(EngineEvent.ExecuteBefore, context);
         const output = await node.onExecute(input, context);
         this.history?.put('execute-after', { nodeId: id, input, output });
+        this.event.emit(EngineEvent.ExecuteAfter, context);
         return output;
     }
 
@@ -68,8 +72,8 @@ export class WorkflowEngine {
         if (!root) {
             throw new Error(`Root node ${this.workflow.root} not found`);
         }
-
         this.state.allSet(input);
+        this.event.emit(EngineEvent.WORKFLOW_RUNNING);
         return await this.runNode(this.workflow.root, input);
     }
 
