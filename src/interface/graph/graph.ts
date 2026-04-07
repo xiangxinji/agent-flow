@@ -6,6 +6,10 @@ export interface Flow {
     version: string
     nodes: Node[]
     edges: Edge[]
+    /**
+     * The root node ID
+     */
+    root: string
 }
 
 export interface Node {

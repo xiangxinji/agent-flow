@@ -23,11 +23,10 @@ async function main() {
         from: "test-1",
         to: "test-2"
       }
-    ]
+    ],
+    root: "test-1"
   });
   const workflow = builder.build();
-  console.log(workflow);
-  
   const engine = new WorkflowEngine(workflow);
   await engine.run();
 }

@@ -34,7 +34,8 @@ export class GraphBuilder {
             id: this.json.id,
             name: this.json.name,
             version: this.json.version,
-            nodes: []
+            nodes: [],
+            root: this.json.root
         });
 
         this.buildNodes(wf);

@@ -6,6 +6,7 @@ export type WorkflowConfig = {
     name: string;            // 流程名称
     version: string;         // DSL 版本，如 "1.0.0"
     nodes: BaseNode[];
+    root: string;
 
 }
 
@@ -14,12 +15,14 @@ export class Workflow {
     name: string;            // 流程名称
     version: string;         // DSL 版本，如 "1.0.0"
     nodes: BaseNode[];
+    root: string;
 
-    constructor({id, name, version, nodes}: WorkflowConfig) {
+    constructor({ id, name, version, nodes, root }: WorkflowConfig) {
         this.id = id;
         this.name = name;
         this.version = version;
         this.nodes = nodes;
+        this.root = root;
     }
 
     /**
@@ -78,19 +81,4 @@ export class Workflow {
         return this.nodes.length;
     }
 
-    /**
-     * Convert the workflow to a JSON representation
-     */
-    toJSON(): Record<string, any> {
-        return {
-            id: this.id,
-            name: this.name,
-            version: this.version,
-            nodes: this.nodes.map(node => ({
-                id: node.id,
-                type: node.type,
-                metadata: node.metadata,
-            })),
-        };
-    }
 }
