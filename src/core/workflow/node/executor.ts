@@ -10,7 +10,7 @@ export type ExecutorNodeConfig = Omit<NodeConfig & {
 export class ExecutorNode extends BaseNode {
     public next: string | null = null;
     public executor: BaseExecutor;
-    
+
     constructor(config: ExecutorNodeConfig) {
         super({ ...config, type: 'executor' });
         this.next = config.next || null;
@@ -18,7 +18,9 @@ export class ExecutorNode extends BaseNode {
     }
 
     async onExecute(input: Input, ctx: EngineContext) {
-        const output = await this.executor.execute(this , input);
+        const output = await this.executor.execute(this, input);
+        ctx.engine.history?.put('execute-after', { nodeId: this.id, input, output });
+
         if (this.next) {
             await ctx.engine.runNode(this.next, output);
         }

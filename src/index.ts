@@ -31,6 +31,8 @@ async function main() {
   await engine.run({
     prompt : '你好'
   });
+
+  console.log(engine.history?.getHistories());
 }
 
 main();

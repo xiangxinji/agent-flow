@@ -19,9 +19,9 @@ export class WorkflowEngine {
 
     public state: EngineState
 
-    public history ?: WorkflowHistory
+    public history?: WorkflowHistory
 
-    constructor(private workflow: Workflow, { history } = { history: true }) {
+    constructor(public workflow: Workflow, { history } = { history: true }) {
         this.state = new EngineState();
         if (history) {
             this.history = new WorkflowHistory(this);
@@ -48,6 +48,7 @@ export class WorkflowEngine {
             node: node,
             state: this.state,
         };
+        this.history?.put('execute-before', { nodeId: id, input });
         await node.onExecute(input, context);
 
     }

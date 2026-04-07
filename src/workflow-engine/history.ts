@@ -1,21 +1,35 @@
 import { WorkflowEngine } from ".";
 
 export interface WorkflowHistoryItem {
-    nodeId: string;
-    input: any;
-    output: any;
-    error?: any;
+    stage: string
+    log: Record<string, any>
 }
 
 export class WorkflowHistory {
-    
-    
+
+
     histories: WorkflowHistoryItem[] = []
 
-    constructor (private engine : WorkflowEngine) {
+    constructor(private engine: WorkflowEngine) {
 
     }
 
-    put () {
+    put(stage: string, log: Record<string, any>) {
+        this.histories.push({
+            stage,
+            log
+        });
+    }
+
+
+    getHistories() {
+        return {
+            workflow: {
+                id: this.engine.workflow.id,
+                name: this.engine.workflow.name,
+                version: this.engine.workflow.version
+            },
+            histories: this.histories
+        }
     }
 }
