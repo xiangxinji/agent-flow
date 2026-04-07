@@ -19,11 +19,11 @@ export class WorkflowEngine {
 
     public state: EngineState
 
-    public history = new WorkflowHistory(this);
+    public history ?: WorkflowHistory
 
     constructor(private workflow: Workflow, { history } = { history: true }) {
         this.state = new EngineState();
-        if (!history) {
+        if (history) {
             this.history = new WorkflowHistory(this);
         }
     }
