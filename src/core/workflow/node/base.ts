@@ -1,5 +1,5 @@
 import { NodeType } from "@/interface/flow/node";
-import { EngineContext, Input } from "../../../workflow-engine/workflow";
+import { EngineContext, Input } from "../../../workflow-engine";
 
 export abstract class BaseNode {
     id: string;

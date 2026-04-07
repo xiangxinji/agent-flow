@@ -1,4 +1,4 @@
-import { EngineContext, Input } from "../../../workflow-engine/workflow";
+import { EngineContext, Input } from "../../../workflow-engine";
 import { BaseExecutor } from "../executor/base";
 import { BaseNode, NodeConfig } from "./base";
 

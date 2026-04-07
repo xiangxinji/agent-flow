@@ -2,7 +2,7 @@
 
 
 import { ExecutorNode } from "../node/executor";
-import { Input } from "../../../workflow-engine/workflow";
+import { Input } from "../../../workflow-engine";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
 
 type AgentExecutorConfig = Omit<{

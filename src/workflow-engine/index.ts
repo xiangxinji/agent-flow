@@ -2,6 +2,7 @@
 import { EngineState } from "./state";
 import { Workflow } from "../core/workflow";
 import { BaseNode } from "../core/workflow/node/base";
+import { WorkflowHistory } from "./history";
 
 
 
@@ -16,12 +17,23 @@ export type EngineContext = {
 
 export class WorkflowEngine {
 
-    state : EngineState 
+    public state: EngineState
 
-    constructor(private workflow: Workflow) { 
+    public history = new WorkflowHistory(this);
+
+    constructor(private workflow: Workflow, { history } = { history: true }) {
         this.state = new EngineState();
+        if (!history) {
+            this.history = new WorkflowHistory(this);
+        }
     }
 
+    /**
+     * 运行指定节点
+     * @param id 节点ID
+     * @param input 输入数据
+     * @returns 
+     */
     public async runNode(id: string, input: Input = {}) {
         if (!id) {
             return;
@@ -36,11 +48,16 @@ export class WorkflowEngine {
             node: node,
             state: this.state,
         };
-         await node.onExecute(input, context);
+        await node.onExecute(input, context);
 
     }
 
-    public async run(input : Input = {}) {
+    /**
+     * 运行当前工作流
+     * @param input 
+     * @returns 
+     */
+    public async run(input: Input = {}) {
         const root = this.workflow.getNode(this.workflow.root);
         if (!root) {
             throw new Error(`Root node ${this.workflow.root} not found`);
@@ -49,4 +66,21 @@ export class WorkflowEngine {
         this.state.allSet(input);
         return await this.runNode(this.workflow.root, input);
     }
+
+
+    /**
+     * 克隆当前引擎实例，并继承其状态 
+     * @returns 克隆的引擎实例
+     */
+    public clone() {
+        const newEngine = new WorkflowEngine(this.workflow, { history: false });
+        newEngine.state.extend(this.state);
+        /**
+         * 多个 engine 共享同一个 history 实例
+         */
+        newEngine.history = this.history;
+        return newEngine;
+    }
+
+
 }

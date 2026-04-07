@@ -1,5 +1,5 @@
 import { GraphBuilder } from "./core/graph/builder";
-import { WorkflowEngine } from "./workflow-engine/workflow";
+import { WorkflowEngine } from "./workflow-engine";
 
 
 

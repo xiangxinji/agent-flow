@@ -1,4 +1,4 @@
-import { EngineContext, Input } from "../../../workflow-engine/workflow";
+import { EngineContext, Input } from "../../../workflow-engine";
 import { BaseNode, NodeConfig } from "./base";
 
 export type ParallelNodeConfig = Omit<NodeConfig & {
