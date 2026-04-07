@@ -15,10 +15,9 @@ export class FunctionCallExecutor extends BaseExecutor {
     }
     
     async execute(node: ExecutorNode , input : Input) {
-        console.log('input ' , input);
-        
         return {
-            result: 'success :' + node.id 
+            ...input ,
+            ['node-id'] : node.id
         };
     }   
 }

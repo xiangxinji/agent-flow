@@ -3,7 +3,7 @@ import { GraphNodeType, Node } from "@/interface/graph/graph";
 import { ExecutorNode } from "../workflow/node/executor";
 import { BranchNode } from "../workflow/node/branch";
 import { IteratorNode } from "../workflow/node/iterator";
-import { ParallelNode } from "../workflow/node/parallel";
+import { ParallelNode, ParallelNodeConfig } from "../workflow/node/parallel";
 import { SubGraphNode } from "../workflow/node/subgraph";
 import { ExecutorFactory } from "./executor-factory";
 
@@ -25,7 +25,7 @@ export class NodeFactory {
         } else if (node.type === 'iterator') {
             return new IteratorNode({ ...base })
         } else if (node.type === 'parallel') {
-            return new ParallelNode({ ...base })
+            return new ParallelNode({ ...base } as ParallelNodeConfig);
         } else if (node.type === 'subgraph') {
             return new SubGraphNode({ ...base })
         }

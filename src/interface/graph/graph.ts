@@ -20,7 +20,12 @@ export interface Node {
     type: GraphNodeType
     metadata ?: Record<string, any>
     attrs ?: Record<string, any>
+}
 
+
+export interface ParallelNode extends Node {
+    branches: Array<string>
+    next ?: string
 }
 
 export interface Edge {

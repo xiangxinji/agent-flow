@@ -35,10 +35,14 @@ export class WorkflowEngine {
      * @returns 
      */
     public async runNode(id: string, input: Input = {}) {
+
+        console.log(id , input );
+        
         if (!id) {
             return;
         }
         const node = this.workflow.getNode(id);
+        
         if (!node) {
             throw new Error(`Node ${id} not found`);
         }
@@ -49,8 +53,9 @@ export class WorkflowEngine {
             state: this.state,
         };
         this.history?.put('execute-before', { nodeId: id, input });
-        await node.onExecute(input, context);
-
+        const output = await node.onExecute(input, context);
+        this.history?.put('execute-after', { nodeId: id, input, output });
+        return output;
     }
 
     /**

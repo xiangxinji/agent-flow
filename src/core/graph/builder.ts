@@ -2,6 +2,8 @@ import { Flow, Node } from "@/interface/graph/graph";
 import { Workflow } from "../workflow";
 import { BaseNode } from "../workflow/node/base";
 import { NodeFactory } from "../factory/node-factory";
+import { ParallelNode } from "../workflow/node/parallel";
+import { isParallelNode } from "../../utils/builder";
 
 export class GraphBuilder {
     private nodeMap: Map<string, BaseNode> = new Map();
@@ -10,10 +12,18 @@ export class GraphBuilder {
 
     }
 
+
     private buildNodes(wf: Workflow) {
         this.json.nodes.forEach(node => {
             const nodeInstance = NodeFactory.create(node);
             this.nodeMap.set(node.id, nodeInstance);
+
+            // 处理并行节点的分支 , 并将分支节点添加到节点映射中
+            if (node.type === 'parallel') {
+                (node as ParallelNode).branches.forEach(i => {
+                    this.nodeMap.set(i, nodeInstance);
+                })
+            }
             wf.addNode(nodeInstance);
         });
     }
@@ -23,6 +33,20 @@ export class GraphBuilder {
             const fromNode = this.nodeMap.get(edge.from);
             const toNode = this.nodeMap.get(edge.to);
             if (fromNode && toNode) {
+
+                /**
+                 * 处理并行节点的分支
+                 * @param fromNode 并行节点
+                 * @param edge 边
+                 */
+                if (isParallelNode(fromNode)) {
+                    if (fromNode.id === edge.from) {
+                        (fromNode as any).next = edge.to;
+                    } else {
+                        (fromNode as ParallelNode).branches.push(edge.to);
+                    }
+                    return;
+                }
                 (fromNode as any).next = edge.to;
             }
         });

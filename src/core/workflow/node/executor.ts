@@ -18,11 +18,11 @@ export class ExecutorNode extends BaseNode {
     }
 
     async onExecute(input: Input, ctx: EngineContext) {
-        const output = await this.executor.execute(this, input);
-        ctx.engine.history?.put('execute-after', { nodeId: this.id, input, output });
-
-        if (this.next) {
-            await ctx.engine.runNode(this.next, output);
+        const res =  await this.executor.execute(this, input);
+        if(this.next) {
+            await ctx.engine.runNode(this.next, res);
         }
+        return res ; 
+
     }
 }
