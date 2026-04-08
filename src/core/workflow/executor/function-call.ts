@@ -6,6 +6,7 @@ import { functionRegistry } from "../../../function";
 import { ExecutorNode } from "../node/executor";
 import { ExecutorRuntime } from "../runtime";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
+import get from 'lodash/get';
 
 type FunctionCallExecutorConfig = Omit<{
     config: {
@@ -26,10 +27,7 @@ export class FunctionCallExecutor extends BaseExecutor {
     }
 
     async execute(node: ExecutorNode, runtime: ExecutorRuntime) {
-
-        console.log(runtime.input);
-
-        const input = runtime.input[this.config.inputKey];
+        const input = get(runtime.input, this.config.inputKey);
 
         runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.config, input]);
 

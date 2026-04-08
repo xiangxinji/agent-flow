@@ -1,6 +1,7 @@
-import { NodeType } from "@/interface/flow/node";
+
 import { EngineContext, Input } from "../../../workflow-engine";
 
+export type NodeType = 'executor' | 'branch' | 'iterator' | 'subgraph' | 'parallel'
 export abstract class BaseNode {
     id: string;
     metadata?: Record<string, any>;
@@ -12,7 +13,6 @@ export abstract class BaseNode {
         this.metadata = metadata;
         this.attrs = attrs;
     }
-
     abstract onExecute (input: Input, ctx : EngineContext): Promise<any>;
 }
 

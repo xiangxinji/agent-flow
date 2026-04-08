@@ -1,11 +1,10 @@
 import { BaseExecutor } from "../workflow/executor/base";
 import { AgentExecutor } from "../workflow/executor/agent";
-import { FunctionCallNode, GraphNodeType } from "@/interface/graph/graph";
+import { FunctionCallNode, GraphNodeType, Node } from "@/interface/graph/graph";
 import { FunctionCallExecutor } from "../workflow/executor/function-call";
-import { BaseNode } from "@/interface/flow/node";
 
 export class ExecutorFactory {
-    static create(type: GraphNodeType, node: BaseNode): BaseExecutor {
+    static create(type: GraphNodeType, node: Node): BaseExecutor {
         if (type === 'agent') {
             return new AgentExecutor({});
         }

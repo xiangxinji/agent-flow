@@ -1,14 +1,13 @@
 
 import { ExecutorNode } from "../node/executor";
-import type { ExecutorType } from "../../../interface/flow/executor";
-import type { EngineContext, Input } from "../../../workflow-engine";
 import { ExecutorRuntime } from "../runtime";
+
+
+export type ExecutorType = 'agent' | 'function-call';
 
 export type BaseExecutorConfig = {
     type: ExecutorType
 }
-
-
 
 
 export abstract class BaseExecutor {
