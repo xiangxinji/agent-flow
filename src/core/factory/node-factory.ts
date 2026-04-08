@@ -19,7 +19,7 @@ export class NodeFactory {
         const attrs = node.attrs || {};
         const base = { id, metadata, attrs };
         if ((['agent' , 'function-call'] as GraphNodeType[]).includes(node.type as GraphNodeType)) {
-            return new ExecutorNode({ ...base , executor : ExecutorFactory.create(node.type  as GraphNodeType) });
+            return new ExecutorNode({ ...base , executor : ExecutorFactory.create(node.type  as GraphNodeType , node ) });
         } else if (node.type === 'branch') {
             return new BranchNode({ ...base });
         } else if (node.type === 'iterator') {

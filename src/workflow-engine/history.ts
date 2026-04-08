@@ -2,7 +2,7 @@ import { WorkflowEngine } from ".";
 
 export interface WorkflowHistoryItem {
     stage: string
-    log: Record<string, any>
+    args: Array<any>
 }
 
 export class WorkflowHistory {
@@ -14,10 +14,10 @@ export class WorkflowHistory {
 
     }
 
-    put(stage: string, log: Record<string, any>) {
+    put(stage: string, args: Array<any>) {
         this.histories.push({
             stage,
-            log
+            args
         });
     }
 

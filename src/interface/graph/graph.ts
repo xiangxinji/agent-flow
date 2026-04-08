@@ -20,14 +20,23 @@ export interface Flow {
 export interface Node {
     id: string
     type: GraphNodeType
-    metadata ?: Record<string, any>
-    attrs ?: Record<string, any>
+    metadata?: Record<string, any>
+    attrs?: Record<string, any>
 }
+
+
+export interface FunctionCallNode extends Node {
+    config : {
+        fnName : string
+        inputKey : string
+    }
+}
+
 
 
 export interface ParallelNode extends Node {
     branches: Array<string>
-    next ?: string
+    next?: string
 }
 
 export interface Edge {
