@@ -15,7 +15,7 @@ async function main() {
         id: "test-1",
         type: "function-call",
         config: {
-          fnName: 'convert.to-json',
+          fnName: 'data.to-json',
           inputKey: 'prompt'
         }
       } as FunctionCallNode,
@@ -23,7 +23,8 @@ async function main() {
         id: "test-2",
         type: "function-call",
         config: {
-
+          fnName: 'tool.log',
+          inputKey: 'name'
         }
       } as FunctionCallNode,
     ],
@@ -48,8 +49,6 @@ async function main() {
     prompt: '{ "name": "张三", "age": 18 }'
   });
 
-
-  console.log(engine.history?.histories);
 }
 
 main();

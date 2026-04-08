@@ -1,22 +1,23 @@
 
 
 
+import { ENGINE_STAGE } from "@/enums/engine";
 import { functionRegistry } from "../../../function";
 import { ExecutorNode } from "../node/executor";
 import { ExecutorRuntime } from "../runtime";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
 
 type FunctionCallExecutorConfig = Omit<{
-    config : {
-        fnName : string
-        inputKey : string
+    config: {
+        fnName: string
+        inputKey: string
     }
 } & BaseExecutorConfig, 'type'>
 
 export class FunctionCallExecutor extends BaseExecutor {
     private config: {
-        fnName : string
-        inputKey : string
+        fnName: string
+        inputKey: string
     };
 
     constructor(config: FunctionCallExecutorConfig) {
@@ -25,15 +26,20 @@ export class FunctionCallExecutor extends BaseExecutor {
     }
 
     async execute(node: ExecutorNode, runtime: ExecutorRuntime) {
+
+        console.log(runtime.input);
+
         const input = runtime.input[this.config.inputKey];
-        if(!this.config.fnName) {
+
+        runtime.engineContext.engine.history?.put(ENGINE_STAGE.FUNCTION_CALL_START, [this.config, input]);
+
+        if (!this.config.fnName) {
             return {
             }
         }
-        const result = functionRegistry.call(this.config.fnName, input);
-        return {
-            ...runtime.input,
-            result
-        };
+        const output = functionRegistry.call(this.config.fnName, input);
+        runtime.engineContext.engine.history?.put(ENGINE_STAGE.FUNCTION_CALL_END, [this.config, output]);
+
+        return output
     }
 }

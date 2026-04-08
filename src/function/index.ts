@@ -1,5 +1,6 @@
 import { ExecutorFunction } from "./base";
-import { ToJsonConvertFunction } from "./convert/to-json";
+import { ToJsonConvertFunction } from "./data/to-json";
+import { LogFunction } from "./tool/log";
 
 
 export class FunctionRegistry {
@@ -7,6 +8,7 @@ export class FunctionRegistry {
 
     constructor() {
         this.register(new ToJsonConvertFunction());
+        this.register(new LogFunction());
     }
 
     register(functionInstance: ExecutorFunction<any, any>) {
