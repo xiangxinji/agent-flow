@@ -31,14 +31,14 @@ export class FunctionCallExecutor extends BaseExecutor {
 
         const input = runtime.input[this.config.inputKey];
 
-        runtime.engineContext.engine.history?.put(ENGINE_STAGE.FUNCTION_CALL_START, [this.config, input]);
+        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.config, input]);
 
         if (!this.config.fnName) {
             return {
             }
         }
         const output = functionRegistry.call(this.config.fnName, input);
-        runtime.engineContext.engine.history?.put(ENGINE_STAGE.FUNCTION_CALL_END, [this.config, output]);
+        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.config, output]);
 
         return output
     }
