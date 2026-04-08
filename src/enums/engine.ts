@@ -1,6 +1,7 @@
 
-export enum EngineEvent {
-    WORKFLOW_RUNNING = 'workflow-running',
-    ExecuteBefore = 'node-actived',
-    ExecuteAfter = 'node-executed',
+export enum ENGINE_STAGE {
+    WORKFLOW_RUNNING = 'WORKFLOW-RUNNING',
+    WORKFLOW_COMPLETED = 'WORKFLOW-COMPLETED',
+    NODE_EXECUTE_BEFORE = 'NODE-EXECUTE-BEFORE',
+    NODE_EXECUTE_AFTER = 'NODE-EXECUTE-AFTER',
 }

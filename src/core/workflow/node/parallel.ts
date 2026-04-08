@@ -1,6 +1,6 @@
-import { result } from "lodash";
 import { EngineContext, Input } from "../../../workflow-engine";
 import { BaseNode, NodeConfig } from "./base";
+import { ENGINE_STAGE } from "@/enums/engine";
 
 export type ParallelNodeConfig = Omit<NodeConfig & {
     branches?: Array<string>;
@@ -15,15 +15,14 @@ export class ParallelNode extends BaseNode {
         super({ ...config, type: 'parallel' });
         this.branches = config.branches || [];
         this.next = config.next || null;
-
     }
 
     async onExecute(input: Input, ctx: EngineContext) {
-
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE, ctx);
         await Promise.all(this.branches.map(async (branch) => {
             return ctx.engine.runNode(branch, input);
         }));
-
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER, ctx);
         if (this.next) {
             return await ctx.engine.runNode(this.next, input);
         }

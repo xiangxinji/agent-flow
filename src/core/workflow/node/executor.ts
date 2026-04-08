@@ -1,3 +1,4 @@
+import { ENGINE_STAGE } from "@/enums/engine";
 import { EngineContext, Input } from "../../../workflow-engine";
 import { BaseExecutor } from "../executor/base";
 import { BaseNode, NodeConfig } from "./base";
@@ -18,7 +19,10 @@ export class ExecutorNode extends BaseNode {
     }
 
     async onExecute(input: Input, ctx: EngineContext) {
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE, ctx);
         const res =  await this.executor.execute(this, input);
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER, ctx);
+
         if(this.next) {
             await ctx.engine.runNode(this.next, res);
         }

@@ -1,5 +1,5 @@
 import { GraphBuilder } from "./core/graph/builder";
-import { EngineEvent } from "./enums/engine";
+import { ENGINE_STAGE } from "./enums/engine";
 import { ParallelNode } from "./interface/graph/graph";
 import { WorkflowEngine } from "./workflow-engine";
 
@@ -76,7 +76,7 @@ async function main() {
 
   const engine = new WorkflowEngine(workflow);
 
-  engine.event.on(EngineEvent.WORKFLOW_RUNNING, () => {
+  engine.event.on(ENGINE_STAGE.WORKFLOW_RUNNING, () => {
     console.log('workflow running');
   });
 
@@ -84,6 +84,8 @@ async function main() {
     prompt: '你好'
   });
 
+
+  console.log(engine.history?.histories);
 }
 
 main();

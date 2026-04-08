@@ -4,7 +4,7 @@ import { Workflow } from "../core/workflow";
 import { BaseNode } from "../core/workflow/node/base";
 import { WorkflowHistory } from "./history";
 import { EventManager } from "@/utils/event-manager";
-import { EngineEvent } from "@/enums/engine";
+import { ENGINE_STAGE } from "@/enums/engine";
 
 
 
@@ -23,12 +23,15 @@ export class WorkflowEngine {
 
     public history?: WorkflowHistory
 
-    public event = new EventManager();
+    public event !: EventManager;
 
-    constructor(public workflow: Workflow, { history } = { history: true }) {
+    constructor(public workflow: Workflow, { history, event } = { history: true, event: true }) {
         this.state = new EngineState();
         if (history) {
             this.history = new WorkflowHistory(this);
+        }
+        if (event) {
+            this.event = new EventManager();
         }
     }
 
@@ -44,7 +47,7 @@ export class WorkflowEngine {
             return;
         }
         const node = this.workflow.getNode(id);
-        
+
         if (!node) {
             throw new Error(`Node ${id} not found`);
         }
@@ -54,11 +57,7 @@ export class WorkflowEngine {
             node: node,
             state: this.state,
         };
-        this.history?.put('execute-before', { nodeId: id, input });
-        this.event.emit(EngineEvent.ExecuteBefore, context);
         const output = await node.onExecute(input, context);
-        this.history?.put('execute-after', { nodeId: id, input, output });
-        this.event.emit(EngineEvent.ExecuteAfter, context);
         return output;
     }
 
@@ -73,8 +72,10 @@ export class WorkflowEngine {
             throw new Error(`Root node ${this.workflow.root} not found`);
         }
         this.state.allSet(input);
-        this.event.emit(EngineEvent.WORKFLOW_RUNNING);
-        return await this.runNode(this.workflow.root, input);
+        this.emit(ENGINE_STAGE.WORKFLOW_RUNNING);
+        const result = await this.runNode(this.workflow.root, input);
+        this.emit(ENGINE_STAGE.WORKFLOW_COMPLETED);
+        return result;
     }
 
 
@@ -83,13 +84,24 @@ export class WorkflowEngine {
      * @returns 克隆的引擎实例
      */
     public clone() {
-        const newEngine = new WorkflowEngine(this.workflow, { history: false });
+        const newEngine = new WorkflowEngine(this.workflow, { history: false, event: false });
         newEngine.state.extend(this.state);
         /**
-         * 多个 engine 共享同一个 history 实例
+         * 多个 engine 共享同一个 history 和 event 实例
          */
         newEngine.history = this.history;
+        newEngine.event = this.event;
         return newEngine;
+    }
+
+    /**
+     * 发送事件 ， 并记入 history 
+     * @param stage 事件阶段
+     * @param args 事件参数
+     */
+    emit(stage: ENGINE_STAGE, ...args: any[]) {
+        this.history?.put(stage, args);
+        this.event?.emit(stage, ...args);
     }
 
 
