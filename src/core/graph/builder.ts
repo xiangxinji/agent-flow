@@ -41,9 +41,9 @@ export class GraphBuilder {
                  */
                 if (isParallelNode(fromNode)) {
                     if (fromNode.id === edge.from) {
-                        (fromNode as any).next = edge.to;
+                        (fromNode as unknown as ParallelNode).next = edge.to;
                     } else {
-                        (fromNode as ParallelNode).branches.push(edge.to);
+                        (fromNode as unknown as ParallelNode).branches.push(edge.to);
                     }
                     return;
                 }

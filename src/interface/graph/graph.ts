@@ -1,3 +1,4 @@
+import { Input } from "./input"
 
 /**
  * 前端配置的节点类型
@@ -28,7 +29,7 @@ export interface Node {
 export interface FunctionCallNode extends Node {
     config : {
         fnName : string
-        inputKey : string
+        input : Record<string , Input>
     }
 }
 

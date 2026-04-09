@@ -1,4 +1,4 @@
-import { EngineContext, Input } from "../../../workflow-engine";
+import { EngineContext,  } from "../../../workflow-engine";
 import { BaseNode, NodeConfig } from "./base";
 
 export type BranchNodeConfig = Omit<NodeConfig & {
@@ -9,7 +9,7 @@ export class BranchNode extends BaseNode {
         super({ ...config, type: 'branch' });
     }
     
-    onExecute(input: Input, ctx: EngineContext): Promise<any> {
+    onExecute(  ctx: EngineContext): Promise<any> {
         throw new Error("Method not implemented.");
     }
 }

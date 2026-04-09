@@ -1,4 +1,4 @@
-import { EngineContext, Input } from "../../../workflow-engine";
+import { EngineContext,  } from "../../../workflow-engine";
 import { BaseNode, NodeConfig } from "./base";
 import { ENGINE_STAGE } from "@/enums/engine";
 
@@ -17,14 +17,14 @@ export class ParallelNode extends BaseNode {
         this.next = config.next || null;
     }
 
-    async onExecute(input: Input, ctx: EngineContext) {
+    async onExecute(  ctx: EngineContext) {
         ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE, ctx);
         await Promise.all(this.branches.map(async (branch) => {
-            return ctx.engine.runNode(branch, input);
+            return ctx.engine.runNode(branch);
         }));
         ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER, ctx);
         if (this.next) {
-            return await ctx.engine.runNode(this.next, input);
+            return await ctx.engine.runNode(this.next);
         }
     }
 }

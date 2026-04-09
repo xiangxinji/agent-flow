@@ -1,4 +1,4 @@
-import { EngineContext, Input } from "../../../workflow-engine";
+import { EngineContext,  } from "../../../workflow-engine";
 import { BaseNode, NodeConfig } from "./base";
 
 export type SubGraphNodeConfig = Omit<NodeConfig & {
@@ -10,7 +10,7 @@ export class SubGraphNode extends BaseNode {
         super({ ...config, type: 'subgraph' });
     }
     
-    onExecute(input: Input, ctx: EngineContext): Promise<any> {
+    onExecute( ctx: EngineContext): Promise<any> {
         throw new Error("Method not implemented.");
     }
 }

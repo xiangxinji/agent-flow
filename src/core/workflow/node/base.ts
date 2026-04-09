@@ -1,5 +1,5 @@
 
-import { EngineContext, Input } from "../../../workflow-engine";
+import { EngineContext,  } from "../../../workflow-engine";
 
 export type NodeType = 'executor' | 'branch' | 'iterator' | 'subgraph' | 'parallel'
 export abstract class BaseNode {
@@ -13,7 +13,7 @@ export abstract class BaseNode {
         this.metadata = metadata;
         this.attrs = attrs;
     }
-    abstract onExecute (input: Input, ctx : EngineContext): Promise<any>;
+    abstract onExecute (ctx : EngineContext): Promise<any>;
 }
 
 

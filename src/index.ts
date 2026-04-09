@@ -16,7 +16,9 @@ async function main() {
         type: "function-call",
         config: {
           fnName: 'data.to-json',
-          inputKey: 'prompt'
+          input: {
+            param: { type: 'running', path: 'prompt' }
+          }
         }
       } as FunctionCallNode,
       {
@@ -24,7 +26,9 @@ async function main() {
         type: "function-call",
         config: {
           fnName: 'tool.log',
-          inputKey: 'name'
+          input: {
+            param: { type: 'ref', path: 'test-1.output.name' }
+          }
         }
       } as FunctionCallNode,
     ],
@@ -40,6 +44,8 @@ async function main() {
   const workflow = builder.build();
 
   const engine = new WorkflowEngine(workflow);
+
+  
 
   engine.event.on(ENGINE_STAGE.WORKFLOW_RUNNING, () => {
     console.log('workflow running');

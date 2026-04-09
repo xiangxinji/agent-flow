@@ -1,39 +1,29 @@
+import { Input } from '@/interface/graph/input';
+import cloneDeep from 'lodash/cloneDeep'
+type State = {
+    key: string
+    data: any
+}
+export class EngineStateManager {
 
-export class EngineState {
+    private state: State[] = [];
 
-    state : Map<string, any> = new Map();
-
-
-    set (key: string, value: any) {
-        this.state.set(key, value);
-    }
-    
-    get (key: string) {
-        return this.state.get(key);
-    }
-
-
-    clear () {
-        this.state.clear();
-    }
-
-    allSet (data : Record<string, any>) {
-        for (const [key, value] of Object.entries(data)) {
-            this.state.set(key, value);
+    setState(key: string, data: any) {
+        const lastIndex = this.state.findIndex(i => i.key === key);
+        if (lastIndex > -1) {
+            this.state.splice(lastIndex, 1);
         }
-    }
 
-    /**
-     * 进行继承 ， 如果像 subgraph 这种需要继承父图的 state 
-     * @param parent 
-     */
-    extend (parent : EngineState) {
-        for (const [key, value] of parent.state) {
-            this.state.set(key, value);
-        }
+        this.state.push({
+            key,
+            data: cloneDeep(data)
+        })
     }
 
 
-
-    
+    getState(key: string) {
+        const ind = this.state.findIndex(i => i.key === key);
+        if (ind === -1) return null
+        return cloneDeep(this.state[ind].data);
+    }
 }
