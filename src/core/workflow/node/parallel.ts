@@ -18,11 +18,11 @@ export class ParallelNode extends BaseNode {
     }
 
     async onExecute(  ctx: EngineContext) {
-        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE, ctx);
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE);
         await Promise.all(this.branches.map(async (branch) => {
             return ctx.engine.runNode(branch);
         }));
-        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER, ctx);
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER);
         if (this.next) {
             return await ctx.engine.runNode(this.next);
         }

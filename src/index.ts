@@ -45,8 +45,6 @@ async function main() {
 
   const engine = new WorkflowEngine(workflow);
 
-  
-
   engine.event.on(ENGINE_STAGE.WORKFLOW_RUNNING, () => {
     console.log('workflow running');
   });
@@ -55,6 +53,9 @@ async function main() {
     prompt: '{ "name": "张三", "age": 18 }'
   });
 
+
+
+  console.log(engine.history?.getHistories());
 }
 
 main();

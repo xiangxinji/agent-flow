@@ -8,18 +8,19 @@ import { ExecutorRuntime } from "../runtime";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
 import { EngineStateGetter } from "@/utils/state-parser";
 import { Input } from "@/interface/graph/input";
+import { CommonInput } from "@/function/base";
 
 type FunctionCallExecutorConfig = Omit<{
     config: {
         fnName: string
-        input: Record<string , Input>
+        input: Record<string, Input>
     }
 } & BaseExecutorConfig, 'type'>
 
 export class FunctionCallExecutor extends BaseExecutor {
     private config: {
         fnName: string
-        input: Record<string , Input>
+        input: Record<string, Input>
     };
 
     constructor(config: FunctionCallExecutorConfig) {
@@ -28,16 +29,14 @@ export class FunctionCallExecutor extends BaseExecutor {
     }
 
     async execute(node: ExecutorNode, runtime: ExecutorRuntime) {
-        const input = EngineStateGetter.getInput<{ param : string }>(runtime.engineContext.state , this.config.input)
-
-        
-        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.config, input]);
+        const input = EngineStateGetter.getInput<CommonInput>(runtime.engineContext.state, this.config.input)
+        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.config]);
         if (!this.config.fnName) {
             return {
             }
         }
-        const output = functionRegistry.call(this.config.fnName, input.param);
-        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.config, output]);
+        const output = functionRegistry.call(this.config.fnName, input);
+        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.config]);
         return output
     }
 }

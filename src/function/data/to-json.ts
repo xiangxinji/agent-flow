@@ -1,12 +1,15 @@
-import { ExecutorFunction } from "../base";
+import { CommonInput, ExecutorFunction } from "../base";
 
 
-export class ToJsonConvertFunction extends ExecutorFunction<string, any> {
+
+
+
+export class ToJsonConvertFunction extends ExecutorFunction<CommonInput, any> {
     constructor() {
         super('data.to-json');
     }
 
-    execute(input: string): any {
-        return JSON.parse(input);
+    execute(input: CommonInput): any {
+        return JSON.parse(input.param);
     }
 }

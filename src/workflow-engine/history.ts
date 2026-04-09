@@ -2,25 +2,21 @@ import { WorkflowEngine } from ".";
 
 export interface WorkflowHistoryItem {
     stage: string
-    args: Array<any>
+    log: string
 }
 
 export class WorkflowHistory {
-
-
     histories: WorkflowHistoryItem[] = []
-
     constructor(private engine: WorkflowEngine) {
 
     }
 
-    put(stage: string, args: Array<any>) {
+    put(stage: string, data : Record<string, any>) {
         this.histories.push({
             stage,
-            args
+            log : JSON.stringify(data)
         });
     }
-
 
     getHistories() {
         return {

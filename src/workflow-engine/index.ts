@@ -32,6 +32,10 @@ export class WorkflowEngine {
         if (event) {
             this.event = new EventManager();
         }
+
+        this.history?.put(ENGINE_STAGE.ENGINE_INIT, {
+            id: this.workflow.id,
+        });
     }
 
     /**
@@ -98,7 +102,6 @@ export class WorkflowEngine {
      * @param args 事件参数
      */
     emit(stage: ENGINE_STAGE, ...args: any[]) {
-        this.history?.put(stage, args);
         this.event?.emit(stage, ...args);
     }
 

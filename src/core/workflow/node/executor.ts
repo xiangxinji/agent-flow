@@ -22,11 +22,11 @@ export class ExecutorNode extends BaseNode {
     }
 
     async onExecute(ctx: EngineContext) {
-        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE, ctx);
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE);
         const runtime = new ExecutorRuntime({ engineContext: ctx });
         const output = await this.executor.execute(this, runtime);
         ctx.state.setState(`[node-output-${this.id}]`, { output })
-        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER, ctx);
+        ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER);
 
 
         if (this.next) {

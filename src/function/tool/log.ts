@@ -1,11 +1,10 @@
-import { ExecutorFunction } from "../base";
+import { CommonInput, ExecutorFunction } from "../base";
 
-export class LogFunction extends ExecutorFunction<string, string> {
+export class LogFunction extends ExecutorFunction<CommonInput, void> {
     constructor() {
         super('tool.log');
     }
-    execute(input: string): string {
-        console.log(input);
-        return input
+    execute(input: CommonInput): void {
+        console.log(input.param);
     }
 }

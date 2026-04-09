@@ -19,7 +19,7 @@ export class FunctionRegistry {
         return this.functionInstances.get(name);
     }
 
-    call(name: string, input: any) {
+    call(name: string, input: Record<string, any>) {
         const fun = this.getFunctionInstance(name);
         if (!fun) {
             throw new Error(`Function ${name} not found`);

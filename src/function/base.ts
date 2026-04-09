@@ -1,6 +1,7 @@
 
 
 
+export type CommonInput = { param: string }
 
 export abstract class ExecutorFunction<Input,Output> {
 
