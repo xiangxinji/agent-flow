@@ -27,8 +27,6 @@ export class ExecutorNode extends BaseNode {
         const output = await this.executor.execute(this, runtime);
         ctx.state.setState(`[node-output-${this.id}]`, { output })
         ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER);
-
-
         if (this.next) {
             await ctx.engine.runNode(this.next);
         }

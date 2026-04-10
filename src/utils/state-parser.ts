@@ -4,15 +4,14 @@ import { EngineStateManager } from "@/workflow-engine/state";
 
 export class EngineStateGetter {
     static getInput<T>(state: EngineStateManager, input: Record<string, Input>): T {
-
         const result = {} as Record<string, any>;
 
         for (const key in input) {
             const item = input[key];
 
             if (item.type === 'running') {
-                const data = state.getState('[running-input]');
-                result[key] = get(data, item.path);
+                const runningData = state.getState('[running-input]');
+                result[key] = get(runningData, item.path);
                 continue;
             }
 
@@ -20,20 +19,20 @@ export class EngineStateGetter {
              * 引用其它节点上的 output 
              */
             if (item.type === 'ref') {
-                const [id] = item.path.split('.');
-                const data = state.getState('[node-output-' + id + ']');
-
-                const temp = {
-                    [id]: data
-                }
-
+                const [nodeId, ...restPath] = item.path.split('.');
+                const nodeOutput = state.getState(`[node-output-${nodeId}]`);
                 
-                result[key] = get(temp, item.path);
+                if (nodeOutput) {
+                    // 直接从节点输出中获取值，不需要临时对象
+                    const valuePath = restPath.join('.');
+                    result[key] = valuePath ? get(nodeOutput, valuePath) : nodeOutput;
+                } else {
+                    result[key] = null;
+                }
                 continue;
             }
         }
 
         return result as T;
-
     }
 }

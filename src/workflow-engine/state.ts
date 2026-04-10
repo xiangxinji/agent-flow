@@ -1,29 +1,36 @@
 import { Input } from '@/interface/graph/input';
 import cloneDeep from 'lodash/cloneDeep'
-type State = {
-    key: string
-    data: any
-}
+
 export class EngineStateManager {
 
-    private state: State[] = [];
+    private state = new Map<string, any>();
 
     setState(key: string, data: any) {
-        const lastIndex = this.state.findIndex(i => i.key === key);
-        if (lastIndex > -1) {
-            this.state.splice(lastIndex, 1);
-        }
-
-        this.state.push({
-            key,
-            data: cloneDeep(data)
-        })
+        this.state.set(key, cloneDeep(data));
     }
 
-
     getState(key: string) {
-        const ind = this.state.findIndex(i => i.key === key);
-        if (ind === -1) return null
-        return cloneDeep(this.state[ind].data);
+        if (!this.state.has(key)) return null;
+        return cloneDeep(this.state.get(key));
+    }
+
+    clear() {
+        this.state.clear();
+    }
+
+    has(key: string): boolean {
+        return this.state.has(key);
+    }
+
+    delete(key: string): boolean {
+        return this.state.delete(key);
+    }
+
+    getKeys(): string[] {
+        return Array.from(this.state.keys());
+    }
+
+    getSize(): number {
+        return this.state.size;
     }
 }
