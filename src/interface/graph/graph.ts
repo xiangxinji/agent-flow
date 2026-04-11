@@ -40,6 +40,14 @@ export interface ParallelNode extends Node {
     next?: string
 }
 
+export interface IBranchNode extends Node {
+    cases: Array<{
+        condition: string;
+        target: string;
+    }>
+    next?: string
+}
+
 export interface Edge {
     from: string
     to: string

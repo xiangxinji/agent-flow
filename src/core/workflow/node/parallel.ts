@@ -4,7 +4,7 @@ import { ENGINE_STAGE } from "@/enums/engine";
 
 export type ParallelNodeConfig = Omit<NodeConfig & {
     branches?: Array<string>;
-    next?: string
+    next: string | null;
 }, 'type'>;
 
 export class ParallelNode extends BaseNode {

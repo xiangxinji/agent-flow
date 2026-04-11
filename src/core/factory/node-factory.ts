@@ -1,7 +1,7 @@
 import { BaseNode } from "../workflow/node/base";
-import { GraphNodeType, Node } from "@/interface/graph/graph";
+import { GraphNodeType, IBranchNode, Node } from "@/interface/graph/graph";
 import { ExecutorNode } from "../workflow/node/executor";
-import { BranchNode } from "../workflow/node/branch";
+import { BranchNode, } from "../workflow/node/branch";
 import { IteratorNode } from "../workflow/node/iterator";
 import { ParallelNode, ParallelNodeConfig } from "../workflow/node/parallel";
 import { SubGraphNode } from "../workflow/node/subgraph";
@@ -18,14 +18,16 @@ export class NodeFactory {
         const metadata = node.metadata || {};
         const attrs = node.attrs || {};
         const base = { id, metadata, attrs };
-        if ((['agent' , 'function-call'] as GraphNodeType[]).includes(node.type as GraphNodeType)) {
-            return new ExecutorNode({ ...base , executor : ExecutorFactory.create(node.type  as GraphNodeType , node ) });
+        if ((['agent', 'function-call'] as GraphNodeType[]).includes(node.type as GraphNodeType)) {
+            return new ExecutorNode({ ...base, executor: ExecutorFactory.create(node.type as GraphNodeType, node) });
         } else if (node.type === 'branch') {
-            return new BranchNode({ ...base });
+            const _node = node as IBranchNode;
+            return new BranchNode({ ...base, cases: _node.cases || [], next: _node.next || null });
         } else if (node.type === 'iterator') {
             return new IteratorNode({ ...base })
         } else if (node.type === 'parallel') {
-            return new ParallelNode({ ...base } as ParallelNodeConfig);
+            const _node = node as ParallelNode;
+            return new ParallelNode({ ...base, branches: _node.branches || [], next: _node.next || null });
         } else if (node.type === 'subgraph') {
             return new SubGraphNode({ ...base })
         }

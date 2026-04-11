@@ -1,11 +1,11 @@
 
-export type Input = RefInput  | RunningInput
+export type Input = RefInput  | RunningInput | LiteralInput
 
 /**
  * 运行时的输入参数 
  */
 export type RunningInput = {
-    type : 'running'
+    type : 'root'
     path : string 
 }
 /**
@@ -16,3 +16,11 @@ export type RefInput = {
     path: string
 }
 
+
+/**
+ * 固定值的输入参数
+ */
+export type LiteralInput = {
+    type : 'literal'
+    value : any
+}

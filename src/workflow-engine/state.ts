@@ -33,4 +33,8 @@ export class EngineStateManager {
     getSize(): number {
         return this.state.size;
     }
+
+    getAll(): Record<string, any> {
+        return Object.fromEntries(this.state);
+    }
 }

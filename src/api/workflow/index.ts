@@ -8,23 +8,25 @@ const workflowApi = new Hono();
 workflowApi.post('/run', async (c) => {
   try {
     const body = await c.req.json();
+
+
     
     // 构建工作流
     const builder = new GraphBuilder({
-      id: body.id || 'test',
-      name: body.name || 'test',
-      version: body.version || '1.0.0',
+      id: body.id,
+      name: body.name,
+      version: body.version,
       nodes: body.nodes || [],
       edges: body.edges || [],
-      root: body.root || 'test-1'
+      root: body.root
     });
-    
+
     const workflow = builder.build();
     const engine = new WorkflowEngine(workflow);
-    
+
     // 运行工作流
     const result = await engine.run(body.input || {});
-    
+
     return c.json({
       success: true,
       result,

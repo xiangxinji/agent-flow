@@ -1,9 +1,9 @@
-import { Flow, Node } from "@/interface/graph/graph";
+import { Flow, IBranchNode, Node } from "@/interface/graph/graph";
 import { Workflow } from "../workflow";
 import { BaseNode } from "../workflow/node/base";
 import { NodeFactory } from "../factory/node-factory";
 import { ParallelNode } from "../workflow/node/parallel";
-import { isParallelNode } from "../../utils/builder";
+import { isBranchNode, isParallelNode } from "../../utils/builder";
 
 export class GraphBuilder {
     private nodeMap: Map<string, BaseNode> = new Map();
@@ -18,10 +18,15 @@ export class GraphBuilder {
             const nodeInstance = NodeFactory.create(node);
             this.nodeMap.set(node.id, nodeInstance);
 
-            // 处理并行节点的分支 , 并将分支节点添加到节点映射中
+            // 处理并行节点的分支 , 并将分支节点的主节点添加到节点映射中
             if (node.type === 'parallel') {
                 (node as ParallelNode).branches.forEach(i => {
                     this.nodeMap.set(i, nodeInstance);
+                })
+            }
+            if (node.type === 'branch') {
+                (node as IBranchNode).cases.forEach(i => {
+                    this.nodeMap.set(i.target, nodeInstance);
                 })
             }
             wf.addNode(nodeInstance);
@@ -43,7 +48,28 @@ export class GraphBuilder {
                     if (fromNode.id === edge.from) {
                         (fromNode as unknown as ParallelNode).next = edge.to;
                     } else {
-                        (fromNode as unknown as ParallelNode).branches.push(edge.to);
+                        const from = edge.from ; 
+                        const ind = (fromNode as unknown as ParallelNode).branches.indexOf(from);
+                        if(ind > -1) {
+                            (fromNode as unknown as ParallelNode).branches[ind] = edge.to;
+                        }
+                    }
+                    return;
+                }
+                /**
+                 * 处理分支节点的分支
+                 * @param fromNode 分支节点
+                 * @param edge 边
+                 */
+                if (isBranchNode(fromNode)) {
+                    if (fromNode.id === edge.from) {
+                        (fromNode as unknown as IBranchNode).next = edge.to;
+                    } else {
+                        const from = edge.from ; 
+                        const ind = (fromNode as unknown as IBranchNode).cases.findIndex(i => i.target === from);
+                        if(ind > -1) {
+                            (fromNode as unknown as IBranchNode).cases[ind] = { ...(fromNode as unknown as IBranchNode).cases[ind], target: edge.to };
+                        }
                     }
                     return;
                 }
@@ -64,6 +90,9 @@ export class GraphBuilder {
 
         this.buildNodes(wf);
         this.buildEdges();
+
+        console.log(wf.nodes);
+        
         return wf;
     }
 

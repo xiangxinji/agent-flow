@@ -1,0 +1,56 @@
+{
+    "id": "test",
+    "name": "test",
+    "version": "1.0.0",
+    "nodes": [
+        {
+            "id": "test-1",
+            "type": "parallel",
+            "branches": [
+                "test-1-parallel-1",
+                "test-1-parallel-2"
+            ]
+        },
+        {
+            "id": "test-2",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "root",
+                        "path": "url"
+                    }
+                }
+            }
+        },
+        {
+            "id": "test-3",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "root",
+                        "path": "number"
+                    }
+                }
+            }
+        }
+    ],
+    "edges": [
+        {
+            "from": "test-1-parallel-1",
+            "to": "test-2"
+        },
+        {
+            "from": "test-1-parallel-2",
+            "to": "test-3"
+        }
+    ],
+    "root": "test-1",
+    "input": {
+        "url": "http://www.baidu.com",
+        "number": "1"
+    }
+}

@@ -1,5 +1,5 @@
 import { ENGINE_STAGE } from "@/enums/engine";
-import { EngineContext,  } from "../../../workflow-engine";
+import { EngineContext, } from "../../../workflow-engine";
 import { BaseExecutor } from "../executor/base";
 import { BaseNode, NodeConfig } from "./base";
 import { ExecutorRuntime } from "../runtime";
@@ -25,7 +25,7 @@ export class ExecutorNode extends BaseNode {
         ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE);
         const runtime = new ExecutorRuntime({ engineContext: ctx });
         const output = await this.executor.execute(this, runtime);
-        ctx.state.setState(`[node-output-${this.id}]`, { output })
+        ctx.state.setState(this.id, { output })
         ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER);
         if (this.next) {
             await ctx.engine.runNode(this.next);

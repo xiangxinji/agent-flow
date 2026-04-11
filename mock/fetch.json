@@ -1,0 +1,48 @@
+{
+    "id": "test",
+    "name": "test",
+    "version": "1.0.0",
+    "nodes": [
+        {
+            "id": "test-1",
+            "type": "function-call",
+            "config": {
+                "fnName": "utils.fetch",
+                "input": {
+                    "url": {
+                        "type": "root",
+                        "path": "url"
+                    },
+                    "method": {
+                        "type": "literal",
+                        "value": "GET"
+                    }
+                }
+            }
+        }
+        ,
+        {
+            "id": "test-2",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "ref",
+                        "path": "test-1.output"
+                    }
+                }
+            }
+        }
+    ],
+    "edges": [
+        {
+            "from": "test-1",
+            "to": "test-2"
+        }
+    ],
+    "root": "test-1",
+    "input": {
+        "url": "http://www.baidu.com"
+    }
+}
