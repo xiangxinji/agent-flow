@@ -10,6 +10,7 @@ import { EngineStateGetter } from "@/utils/state-parser";
 import { Input } from "@/interface/graph/input";
 import { CommonInput } from "@/function/base";
 
+
 type FunctionCallExecutorConfig = Omit<{
     config: {
         fnName: string
@@ -18,6 +19,7 @@ type FunctionCallExecutorConfig = Omit<{
 } & BaseExecutorConfig, 'type'>
 
 export class FunctionCallExecutor extends BaseExecutor {
+
     private config: {
         fnName: string
         input: Record<string, Input>

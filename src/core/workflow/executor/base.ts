@@ -5,9 +5,11 @@ import { ExecutorRuntime } from "../runtime";
 
 export type ExecutorType = 'agent' | 'function-call';
 
+
 export type BaseExecutorConfig = {
     type: ExecutorType
 }
+
 
 
 export abstract class BaseExecutor {

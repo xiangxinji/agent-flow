@@ -1,9 +1,15 @@
+import * as dotenv from 'dotenv';
+
+
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import api from './index';
-
+// 加载环境变量
+dotenv.config();
 const app = new Hono();
 const PORT = process.env.PORT || 3000;
+
+
 
 // 健康检查接口
 app.get('/health', (c) => {

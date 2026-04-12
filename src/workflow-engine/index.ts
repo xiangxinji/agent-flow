@@ -5,6 +5,9 @@ import { BaseNode } from "../core/workflow/node/base";
 import { WorkflowHistory } from "./history";
 import { EventManager } from "@/utils/event-manager";
 import { ENGINE_STAGE } from "@/enums/engine";
+import type { Mastra } from "@mastra/core";
+import { createMastraInstance } from "../mastra/index";
+
 
 
 
@@ -24,6 +27,8 @@ export class WorkflowEngine {
 
     public event !: EventManager;
 
+    public mastra: Mastra;
+
     constructor(public workflow: Workflow, { history, event } = { history: true, event: true }) {
         this.state = new EngineStateManager();
         if (history) {
@@ -32,10 +37,10 @@ export class WorkflowEngine {
         if (event) {
             this.event = new EventManager();
         }
-
         this.history?.put(ENGINE_STAGE.ENGINE_INIT, {
             id: this.workflow.id,
         });
+        this.mastra = createMastraInstance();
     }
 
     /**

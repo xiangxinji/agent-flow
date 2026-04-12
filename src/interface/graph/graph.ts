@@ -27,12 +27,21 @@ export interface Node {
 
 
 export interface FunctionCallNode extends Node {
-    config : {
-        fnName : string
-        input : Record<string , Input>
+    config: {
+        fnName: string
+        input: Record<string, Input>
     }
 }
 
+
+export interface IAgentNode extends Node {
+    config: {
+        instructions: string
+        input : {
+            prompt : Input
+        }
+    }
+}
 
 
 export interface ParallelNode extends Node {
