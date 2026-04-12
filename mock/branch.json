@@ -8,11 +8,11 @@
             "type": "branch",
             "cases": [
                 {
-                    "condition": "root.number > 0",
+                    "condition": "$.number > 0",
                     "target": "test-1-branch-1"
                 },
                 {
-                    "condition": "root.number <= 0",
+                    "condition": "$.number <= 0",
                     "target": "test-1-branch-2"
                 }
             ]
@@ -24,8 +24,8 @@
                 "fnName": "tool.log",
                 "input": {
                     "param": {
-                        "type": "root",
-                        "path": "url"
+                        "type": "ref",
+                        "path": "$.url"
                     }
                 }
             }
@@ -37,8 +37,8 @@
                 "fnName": "tool.log",
                 "input": {
                     "param": {
-                        "type": "root",
-                        "path": "number"
+                        "type": "ref",
+                        "path": "$.number"
                     }
                 }
             }

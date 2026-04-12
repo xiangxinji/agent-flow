@@ -79,7 +79,7 @@ export class WorkflowEngine {
         if (!root) {
             throw new Error(`Root node ${this.workflow.root} not found`);
         }
-        this.state.setState('root', input)
+        this.state.setState('$', input)
         this.emit(ENGINE_STAGE.WORKFLOW_RUNNING);
         const result = await this.runNode(this.workflow.root);
         this.emit(ENGINE_STAGE.WORKFLOW_COMPLETED);

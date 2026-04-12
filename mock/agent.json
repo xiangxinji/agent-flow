@@ -10,8 +10,8 @@
                 "instructions": "你是一个智能助手，你可以回答用户的问题。",
                 "input": {
                     "prompt": {
-                        "type": "literal",
-                        "value": "请问如何把一个大象放到冰箱里？"
+                        "type": "ref",
+                        "path": "$.prompt"
                     }
                 }
             }
@@ -23,8 +23,8 @@
                 "fnName": "tool.log",
                 "input": {
                     "param": {
-                        "type": "ref",
-                        "path": "test-1.output.text"
+                        "type": "template",
+                        "template": "AI 的回答是：${test-1.output.text}"
                     }
                 }
             }
@@ -38,6 +38,6 @@
     ],
     "root": "test-1",
     "input": {
-    
+        "prompt": "请问如何把一个大象放到冰箱里？"
     }
 }
