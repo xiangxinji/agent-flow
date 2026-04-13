@@ -1,4 +1,4 @@
-import type { EngineContext } from "../../../workflow-engine";
+import type { EngineContext } from "../engine";
 
 export class ExecutorRuntime {
     public engineContext: EngineContext;

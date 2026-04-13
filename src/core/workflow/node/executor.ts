@@ -1,5 +1,5 @@
-import { ENGINE_STAGE } from "@/enums/engine";
-import { EngineContext, } from "../../../workflow-engine";
+import { ENGINE_STAGE } from "@/core/enums/engine";
+import { EngineContext, } from "../engine";
 import { BaseExecutor } from "../executor/base";
 import { BaseNode, NodeConfig } from "./base";
 import { ExecutorRuntime } from "../runtime";

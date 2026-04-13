@@ -1,5 +1,5 @@
 
-import { EngineContext,  } from "../../../workflow-engine";
+import { EngineContext,  } from "../engine";
 
 export type NodeType = 'executor' | 'branch' | 'iterator' | 'subgraph' | 'parallel'
 export abstract class BaseNode {

@@ -1,6 +1,6 @@
-import { Input } from "@/interface/graph/input";
+import { Input } from "@/core/interface/graph/input";
 import get from 'lodash/get'
-import { EngineStateManager } from "@/workflow-engine/state";
+import { EngineStateManager } from "@/core/workflow/engine/state";
 
 export class EngineStateGetter {
     static getInput<T>(state: EngineStateManager, input: Record<string, Input>): T {

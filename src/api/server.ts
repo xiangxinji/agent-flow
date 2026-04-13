@@ -6,7 +6,7 @@ import { serve } from '@hono/node-server';
 import api from './index';
 // 加载环境变量
 dotenv.config();
-const app = new Hono();
+const app: Hono = new Hono();
 const PORT = process.env.PORT || 3000;
 
 

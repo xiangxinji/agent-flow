@@ -1,4 +1,4 @@
-import { Input } from '@/interface/graph/input';
+import { Input } from '@/core/interface/graph/input';
 import cloneDeep from 'lodash/cloneDeep'
 
 export class EngineStateManager {

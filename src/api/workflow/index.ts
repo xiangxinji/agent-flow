@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { GraphBuilder } from '@/core/graph/builder';
-import { WorkflowEngine } from '@/workflow-engine';
+import { WorkflowEngine } from '@/core/workflow/engine';
 
-const workflowApi = new Hono();
+const workflowApi: Hono = new Hono();
 
 // 运行工作流接口
 workflowApi.post('/run', async (c) => {

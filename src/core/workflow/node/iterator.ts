@@ -1,4 +1,4 @@
-import { EngineContext,  } from "../../../workflow-engine";
+import { EngineContext,  } from "../engine";
 import { BaseNode, NodeConfig } from "./base";
 
 export type IteratorNodeConfig = Omit<NodeConfig & {

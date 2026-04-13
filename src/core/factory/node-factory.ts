@@ -1,5 +1,5 @@
 import { BaseNode } from "../workflow/node/base";
-import { GraphNodeType, IBranchNode, Node } from "@/interface/graph/graph";
+import { GraphNodeType, IBranchNode, INode, IParallelNode } from "@/core/interface/graph/graph";
 import { ExecutorNode } from "../workflow/node/executor";
 import { BranchNode, } from "../workflow/node/branch";
 import { IteratorNode } from "../workflow/node/iterator";
@@ -13,7 +13,7 @@ export class NodeFactory {
      * @param node 节点配置
      * @returns 节点实例
      */
-    static create(node: Node): BaseNode {
+    static create(node: INode): BaseNode {
         const id = node.id;
         const metadata = node.metadata || {};
         const attrs = node.attrs || {};
@@ -26,7 +26,7 @@ export class NodeFactory {
         } else if (node.type === 'iterator') {
             return new IteratorNode({ ...base })
         } else if (node.type === 'parallel') {
-            const _node = node as ParallelNode;
+            const _node = node as IParallelNode;
             return new ParallelNode({ ...base, branches: _node.branches || [], next: _node.next || null });
         } else if (node.type === 'subgraph') {
             return new SubGraphNode({ ...base })

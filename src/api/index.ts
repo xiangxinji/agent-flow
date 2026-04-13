@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import workflowApi from './workflow';
 
-const api = new Hono();
+const api: Hono = new Hono();
 
 // 工作流 API
 api.route('/workflow', workflowApi);

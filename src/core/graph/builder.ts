@@ -1,4 +1,4 @@
-import { Flow, IBranchNode, Node } from "@/interface/graph/graph";
+import { IFlow, IBranchNode, INode, IParallelNode } from "@/core/interface/graph/graph";
 import { Workflow } from "../workflow";
 import { BaseNode } from "../workflow/node/base";
 import { NodeFactory } from "../factory/node-factory";
@@ -8,7 +8,7 @@ import { isBranchNode, isParallelNode } from "../../utils/builder";
 export class GraphBuilder {
     private nodeMap: Map<string, BaseNode> = new Map();
 
-    constructor(private json: Flow) {
+    constructor(private json: IFlow) {
 
     }
 
@@ -20,7 +20,7 @@ export class GraphBuilder {
 
             // 处理并行节点的分支 , 并将分支节点的主节点添加到节点映射中
             if (node.type === 'parallel') {
-                (node as ParallelNode).branches.forEach(i => {
+                (node as IParallelNode).branches.forEach(i => {
                     this.nodeMap.set(i, nodeInstance);
                 })
             }

@@ -1,15 +1,12 @@
 
 import { EngineStateManager } from "./state";
-import { Workflow } from "../core/workflow";
-import { BaseNode } from "../core/workflow/node/base";
+import { Workflow } from "..";
+import { BaseNode } from "../node/base";
 import { WorkflowHistory } from "./history";
 import { EventManager } from "@/utils/event-manager";
-import { ENGINE_STAGE } from "@/enums/engine";
+import { ENGINE_STAGE } from "@/core/enums/engine";
 import type { Mastra } from "@mastra/core";
-import { createMastraInstance } from "../mastra/index";
-
-
-
+import { createMastraInstance } from "../../../mastra/index";
 
 
 

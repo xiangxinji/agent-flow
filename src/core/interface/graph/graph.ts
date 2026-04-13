@@ -6,19 +6,19 @@ import { Input } from "./input"
 export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'subgraph' | 'function-call'
 
 
-export interface Flow {
+export interface IFlow {
     id: string
     name: string
     version: string
-    nodes: Node[]
-    edges: Edge[]
+    nodes: INode[]
+    edges: IEdge[]
     /**
      * The root node ID
      */
     root: string
 }
 
-export interface Node {
+export interface INode {
     id: string
     type: GraphNodeType
     metadata?: Record<string, any>
@@ -26,7 +26,7 @@ export interface Node {
 }
 
 
-export interface FunctionCallNode extends Node {
+export interface IFunctionCallNode extends INode {
     config: {
         fnName: string
         input: Record<string, Input>
@@ -34,7 +34,7 @@ export interface FunctionCallNode extends Node {
 }
 
 
-export interface IAgentNode extends Node {
+export interface IAgentNode extends INode {
     config: {
         instructions: string
         input : {
@@ -44,12 +44,12 @@ export interface IAgentNode extends Node {
 }
 
 
-export interface ParallelNode extends Node {
+export interface IParallelNode extends INode {
     branches: Array<string>
     next?: string
 }
 
-export interface IBranchNode extends Node {
+export interface IBranchNode extends INode {
     cases: Array<{
         condition: string;
         target: string;
@@ -57,7 +57,7 @@ export interface IBranchNode extends Node {
     next?: string
 }
 
-export interface Edge {
+export interface IEdge {
     from: string
     to: string
 }

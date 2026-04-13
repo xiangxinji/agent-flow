@@ -5,7 +5,7 @@ import { createMastraAgent } from "@/mastra";
 import { ExecutorNode } from "../node/executor";
 import { ExecutorRuntime } from "../runtime";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
-import { Input } from "@/interface/graph/input";
+import { Input } from "@/core/interface/graph/input";
 import { EngineStateGetter } from "@/utils/state-parser";
 
 type AgentExecutorConfig = Omit<{

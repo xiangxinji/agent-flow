@@ -1,6 +1,6 @@
-import { EngineContext,  } from "../../../workflow-engine";
+import { EngineContext,  } from "../engine";
 import { BaseNode, NodeConfig } from "./base";
-import { ENGINE_STAGE } from "@/enums/engine";
+import { ENGINE_STAGE } from "@/core/enums/engine";
 
 export type ParallelNodeConfig = Omit<NodeConfig & {
     branches?: Array<string>;
