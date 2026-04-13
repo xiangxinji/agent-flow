@@ -1,0 +1,86 @@
+{
+  "id": "parallel-workflow-example",
+  "name": "并行节点示例工作流",
+  "version": "1.0.0",
+  "root": "prepare-order-data",
+  "nodes": [
+    {
+      "id": "prepare-order-data",
+      "type": "function-call",
+      "config": {
+        "fnName": "prepareOrderData",
+        "input": {
+          "orderId": { "type": "ref", "path": "$.orderId" }
+        }
+      }
+    },
+    {
+      "id": "parallel-order-processing",
+      "type": "parallel",
+      "branches": [
+        "validate-payment",
+        "check-inventory",
+        "calculate-shipping"
+      ],
+      "next": "finalize-order"
+    },
+    {
+      "id": "validate-payment",
+      "type": "function-call",
+      "config": {
+        "fnName": "validatePayment",
+        "input": {
+          "paymentInfo": { "type": "ref", "path": "prepare-order-data.paymentInfo" },
+          "amount": { "type": "ref", "path": "prepare-order-data.amount" }
+        }
+      }
+    },
+    {
+      "id": "check-inventory",
+      "type": "function-call",
+      "config": {
+        "fnName": "checkInventory",
+        "input": {
+          "items": { "type": "ref", "path": "prepare-order-data.items" },
+          "warehouse": { "type": "literal", "value": "main" }
+        }
+      }
+    },
+    {
+      "id": "calculate-shipping",
+      "type": "function-call",
+      "config": {
+        "fnName": "calculateShipping",
+        "input": {
+          "address": { "type": "ref", "path": "prepare-order-data.shippingAddress" },
+          "weight": { "type": "ref", "path": "prepare-order-data.totalWeight" },
+          "method": { "type": "literal", "value": "standard" }
+        }
+      }
+    },
+    {
+      "id": "finalize-order",
+      "type": "function-call",
+      "config": {
+        "fnName": "finalizeOrder",
+        "input": {
+          "orderData": { "type": "ref", "path": "prepare-order-data" },
+          "paymentResult": { "type": "ref", "path": "validate-payment" },
+          "inventoryResult": { "type": "ref", "path": "check-inventory" },
+          "shippingResult": { "type": "ref", "path": "calculate-shipping" },
+          "confirmOrder": { "type": "literal", "value": true }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "prepare-order-data",
+      "to": "parallel-order-processing"
+    },
+    {
+      "from": "finalize-order",
+      "to": "send-confirmation"
+    }
+  ]
+}

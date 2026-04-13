@@ -1,0 +1,128 @@
+{
+  "id": "agent-workflow-example",
+  "name": "Agent节点示例工作流",
+  "version": "1.0.0",
+  "root": "analyze-customer-query",
+  "nodes": [
+    {
+      "id": "analyze-customer-query",
+      "type": "agent",
+      "config": {
+        "instructions": "你是一个智能客服助手，负责分析用户查询并确定查询类型（产品咨询、技术支持、账单问题、其他）。",
+        "input": {
+          "prompt": {
+            "type": "template",
+            "template": "分析以下用户查询并分类：${query.text}\n\n用户信息：\n- 用户ID：${query.userId}\n- 会员等级：${query.membershipLevel}\n\n请返回查询类型和优先级。"
+          }
+        }
+      }
+    },
+    {
+      "id": "query-classification",
+      "type": "function-call",
+      "config": {
+        "fnName": "parseAgentResponse",
+        "input": {
+          "agentResponse": { "type": "ref", "path": "analyze-customer-query" }
+        }
+      }
+    },
+    {
+      "id": "route-by-query-type",
+      "type": "branch",
+      "cases": [
+        {
+          "condition": "$.query-classification.queryType === 'product-inquiry'",
+          "target": "handle-product-inquiry"
+        },
+        {
+          "condition": "$.query-classification.queryType === 'technical-support'",
+          "target": "handle-technical-support"
+        },
+        {
+          "condition": "$.query-classification.queryType === 'billing-issue'",
+          "target": "handle-billing-issue"
+        }
+      ],
+      "next": "handle-general-query"
+    },
+    {
+      "id": "handle-product-inquiry",
+      "type": "agent",
+      "config": {
+        "instructions": "你是产品专家，请根据用户查询提供详细的产品信息，包括功能、价格、优势等。",
+        "input": {
+          "prompt": {
+            "type": "ref",
+            "path": "$.originalQuery"
+          }
+        }
+      }
+    },
+    {
+      "id": "handle-technical-support",
+      "type": "agent",
+      "config": {
+        "instructions": "你是技术支持专家，请分析用户的技术问题并提供解决方案。",
+        "input": {
+          "prompt": {
+            "type": "template",
+            "template": "技术问题：${query.text}\n\n用户环境：\n- 设备：${query.device}\n- 操作系统：${query.os}\n- 浏览器：${query.browser}\n\n请提供详细的故障排除步骤。"
+          }
+        }
+      }
+    },
+    {
+      "id": "handle-billing-issue",
+      "type": "agent",
+      "config": {
+        "instructions": "你是账单专家，请帮助用户解决账单和支付相关的问题。",
+        "input": {
+          "prompt": {
+            "type": "template",
+            "template": "账单查询：${query.text}\n\n账户信息：\n- 账户ID：${query.accountId}\n- 查询类型：${query.billingType}\n\n请提供账单详情和解决方案。"
+          }
+        }
+      }
+    },
+    {
+      "id": "handle-general-query",
+      "type": "agent",
+      "config": {
+        "instructions": "你是通用客服助手，请友好地处理用户的常规咨询。",
+        "input": {
+          "prompt": {
+            "type": "ref",
+            "path": "$.originalQuery"
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "analyze-customer-query",
+      "to": "query-classification"
+    },
+    {
+      "from": "query-classification",
+      "to": "route-by-query-type"
+    },
+    {
+      "from": "handle-product-inquiry",
+      "to": "generate-response"
+    },
+    {
+      "from": "handle-technical-support",
+      "to": "generate-response"
+    },
+    {
+      "from": "handle-billing-issue",
+      "to": "generate-response"
+    },
+    {
+      "from": "handle-general-query",
+      "to": "generate-response"
+    }
+  ]
+}
