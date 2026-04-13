@@ -1,0 +1,76 @@
+{
+  "id": "main-workflow-with-subgraphs",
+  "name": "包含子工作流的主工作流",
+  "version": "1.0.0",
+  "root": "fetch-main-data",
+  "nodes": [
+    {
+      "id": "fetch-main-data",
+      "type": "function-call",
+      "config": {
+        "fnName": "fetchMainData",
+        "input": {
+          "query": { "type": "literal", "value": "main query" }
+        }
+      }
+    },
+    {
+      "id": "process-user-data",
+      "type": "subgraph",
+      "subgraph": {
+        "workflowId": "user-processing-workflow",
+        "inputMapping": {
+          "userId": { "type": "ref", "path": "fetch-main-data.userId" },
+          "userName": { "type": "ref", "path": "fetch-main-data.userName" },
+          "timestamp": { "type": "literal", "value": "2024-01-01T00:00:00Z" }
+        },
+        "outputMapping": {
+          "processedResult": "result.summary",
+          "userScore": "result.score"
+        },
+        "next": "process-order-data",
+        "inheritState": false,
+        "onError": "continue"
+      }
+    },
+    {
+      "id": "process-order-data",
+      "type": "subgraph",
+      "subgraph": {
+        "workflowId": "order-processing-workflow",
+        "inputMapping": {
+          "orderId": { "type": "ref", "path": "fetch-main-data.orderId" },
+          "userData": { "type": "ref", "path": "process-user-data.processedResult" }
+        },
+        "outputMapping": {
+          "orderStatus": "status",
+          "totalAmount": "amount"
+        },
+        "next": "generate-final-report",
+        "inheritState": false,
+        "onError": "stop"
+      }
+    },
+    {
+      "id": "generate-final-report",
+      "type": "function-call",
+      "config": {
+        "fnName": "generateFinalReport",
+        "input": {
+          "userResult": { "type": "ref", "path": "process-user-data.mappedOutput" },
+          "orderResult": { "type": "ref", "path": "process-order-data.mappedOutput" }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "fetch-main-data",
+      "to": "process-user-data"
+    },
+    {
+      "from": "generate-final-report",
+      "to": "end"
+    }
+  ]
+}

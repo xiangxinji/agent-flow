@@ -37,4 +37,32 @@ export class EngineStateManager {
     getAll(): Record<string, any> {
         return Object.fromEntries(this.state);
     }
+
+    /**
+     * 设置迭代项的值（用于 IteratorNode）
+     */
+    setItem(key: string, value: any) {
+        this.state.set(`$${key}`, cloneDeep(value));
+    }
+
+    /**
+     * 设置迭代索引的值（用于 IteratorNode）
+     */
+    setIndex(key: string, value: number) {
+        this.state.set(`$${key}`, cloneDeep(value));
+    }
+
+    /**
+     * 获取迭代项的值（用于 IteratorNode）
+     */
+    getItem(key: string): any {
+        return this.getState(`$${key}`);
+    }
+
+    /**
+     * 获取迭代索引的值（用于 IteratorNode）
+     */
+    getIndex(key: string): number {
+        return this.getState(`$${key}`);
+    }
 }

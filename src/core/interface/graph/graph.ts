@@ -57,6 +57,28 @@ export interface IBranchNode extends INode {
     next?: string
 }
 
+export interface IIteratorNode extends INode {
+    iterator: {
+        array: Input;              // 要迭代的数组数据源
+        itemKey?: string;          // 当前元素存储键名，默认 'item'
+        indexKey?: string;         // 当前索引存储键名，默认 'index'
+        target: string;            // 要迭代的子节点 ID
+        next?: string;             // 迭代完成后的下一个节点
+        parallel?: boolean;        // 是否并行处理（高级特性）
+    }
+}
+
+export interface ISubGraphNode extends INode {
+    subgraph: {
+        workflowId: string;        // 子工作流的 ID
+        inputMapping?: Record<string, Input>;  // 输入参数映射
+        outputMapping?: Record<string, string>; // 输出结果映射
+        next?: string;             // 子工作流完成后的下一个节点
+        inheritState?: boolean;    // 是否继承父工作流的状态（默认 false）
+        onError?: 'continue' | 'stop'; // 错误处理策略
+    }
+}
+
 export interface IEdge {
     from: string
     to: string

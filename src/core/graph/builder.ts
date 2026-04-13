@@ -1,4 +1,4 @@
-import { IFlow, IBranchNode, INode, IParallelNode } from "@/core/interface/graph/graph";
+import { IFlow, IBranchNode, INode, IParallelNode, IIteratorNode } from "@/core/interface/graph/graph";
 import { Workflow } from "../workflow";
 import { BaseNode } from "../workflow/node/base";
 import { NodeFactory } from "../factory/node-factory";
@@ -28,6 +28,12 @@ export class GraphBuilder {
                 (node as IBranchNode).cases.forEach(i => {
                     this.nodeMap.set(i.target, nodeInstance);
                 })
+            }
+            if (node.type === 'iterator') {
+                // 对于 iterator 节点，我们需要特殊处理 target 节点
+                // 因为 iterator 节点会重复执行其 target 节点
+                const iteratorNode = node as IIteratorNode;
+                // 这里我们不需要额外处理，因为 iterator 节点通过 iterator.target 来指定目标节点
             }
             wf.addNode(nodeInstance);
         });
