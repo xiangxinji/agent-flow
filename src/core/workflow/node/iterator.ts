@@ -53,6 +53,14 @@ export class IteratorNode extends BaseNode {
                 ctx.state.setItem(itemKey, item);
                 ctx.state.setIndex(indexKey, i);
 
+                // 将当前迭代项存储在节点输出中，以便其他节点可以通过 ref 引用
+                ctx.state.setState(this.id, {
+                    [itemKey]: item,
+                    [indexKey]: i,
+                    total: array.length,
+                    currentIndex: i
+                });
+
                 // 执行子节点
                 try {
                     const result = await ctx.engine.runNode(targetNode);

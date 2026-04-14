@@ -5,18 +5,22 @@
     "nodes": [
         {
             "id": "test-1",
-            "type": "branch",
-            "cases": [
-                {
-                    "condition": "$.number > 0",
-                    "target": "test-1-branch-1"
-                },
-                {
-                    "condition": "$.number <= 0",
-                    "target": "test-1-branch-2"
+            "type": "function-call",
+            "config": {
+                "fnName": "utils.fetch",
+                "input": {
+                    "url": {
+                        "type": "ref",
+                        "path": "$.url"
+                    },
+                    "method": {
+                        "type": "literal",
+                        "value": "GET"
+                    }
                 }
-            ]
-        },
+            }
+        }
+        ,
         {
             "id": "test-2",
             "type": "function-call",
@@ -25,20 +29,7 @@
                 "input": {
                     "param": {
                         "type": "ref",
-                        "path": "$.url"
-                    }
-                }
-            }
-        },
-        {
-            "id": "test-3",
-            "type": "function-call",
-            "config": {
-                "fnName": "tool.log",
-                "input": {
-                    "param": {
-                        "type": "ref",
-                        "path": "$.number"
+                        "path": "test-1.output"
                     }
                 }
             }
@@ -46,17 +37,12 @@
     ],
     "edges": [
         {
-            "from": "test-1-branch-1",
+            "from": "test-1",
             "to": "test-2"
-        },
-        {
-            "from": "test-1-branch-2",
-            "to": "test-3"
         }
     ],
     "root": "test-1",
     "input": {
-        "url": "http://www.baidu.com",
-        "number": "0"
+        "url": "http://www.baidu.com"
     }
 }

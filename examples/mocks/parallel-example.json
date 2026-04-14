@@ -1,86 +1,56 @@
 {
-  "id": "parallel-workflow-example",
-  "name": "并行节点示例工作流",
-  "version": "1.0.0",
-  "root": "prepare-order-data",
-  "nodes": [
-    {
-      "id": "prepare-order-data",
-      "type": "function-call",
-      "config": {
-        "fnName": "prepareOrderData",
-        "input": {
-          "orderId": { "type": "ref", "path": "$.orderId" }
+    "id": "test",
+    "name": "test",
+    "version": "1.0.0",
+    "nodes": [
+        {
+            "id": "test-1",
+            "type": "parallel",
+            "branches": [
+                "test-1-parallel-1",
+                "test-1-parallel-2"
+            ]
+        },
+        {
+            "id": "test-2",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "root",
+                        "path": "url"
+                    }
+                }
+            }
+        },
+        {
+            "id": "test-3",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "root",
+                        "path": "number"
+                    }
+                }
+            }
         }
-      }
-    },
-    {
-      "id": "parallel-order-processing",
-      "type": "parallel",
-      "branches": [
-        "validate-payment",
-        "check-inventory",
-        "calculate-shipping"
-      ],
-      "next": "finalize-order"
-    },
-    {
-      "id": "validate-payment",
-      "type": "function-call",
-      "config": {
-        "fnName": "validatePayment",
-        "input": {
-          "paymentInfo": { "type": "ref", "path": "prepare-order-data.paymentInfo" },
-          "amount": { "type": "ref", "path": "prepare-order-data.amount" }
+    ],
+    "edges": [
+        {
+            "from": "test-1-parallel-1",
+            "to": "test-2"
+        },
+        {
+            "from": "test-1-parallel-2",
+            "to": "test-3"
         }
-      }
-    },
-    {
-      "id": "check-inventory",
-      "type": "function-call",
-      "config": {
-        "fnName": "checkInventory",
-        "input": {
-          "items": { "type": "ref", "path": "prepare-order-data.items" },
-          "warehouse": { "type": "literal", "value": "main" }
-        }
-      }
-    },
-    {
-      "id": "calculate-shipping",
-      "type": "function-call",
-      "config": {
-        "fnName": "calculateShipping",
-        "input": {
-          "address": { "type": "ref", "path": "prepare-order-data.shippingAddress" },
-          "weight": { "type": "ref", "path": "prepare-order-data.totalWeight" },
-          "method": { "type": "literal", "value": "standard" }
-        }
-      }
-    },
-    {
-      "id": "finalize-order",
-      "type": "function-call",
-      "config": {
-        "fnName": "finalizeOrder",
-        "input": {
-          "orderData": { "type": "ref", "path": "prepare-order-data" },
-          "paymentResult": { "type": "ref", "path": "validate-payment" },
-          "inventoryResult": { "type": "ref", "path": "check-inventory" },
-          "shippingResult": { "type": "ref", "path": "calculate-shipping" },
-          "confirmOrder": { "type": "literal", "value": true }
-        }
-      }
+    ],
+    "root": "test-1",
+    "input": {
+        "url": "http://www.baidu.com",
+        "number": "1"
     }
-  ],
-  "edges": [
-    {
-      "from": "prepare-order-data",
-      "to": "parallel-order-processing"
-    },
-    {
-      "from": "finalize-order",
-      "to": "send-confirmation"
-    }
-  ]
 }

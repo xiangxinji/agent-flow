@@ -1,70 +1,54 @@
 {
-  "id": "iterator-workflow-example",
-  "name": "批量处理用户邮件工作流",
-  "version": "1.0.0",
-  "root": "fetch-users",
-  "nodes": [
-    {
-      "id": "fetch-users",
-      "type": "function-call",
-      "config": {
-        "fnName": "fetchUsers",
-        "input": {
-          "limit": { "type": "literal", "value": 10 }
+    "id": "test",
+    "name": "test",
+    "version": "1.0.0",
+    "nodes": [
+        {
+            "id": "test-1",
+            "type": "iterator",
+            "iterator": {
+                "array": {
+                    "type": "literal",
+                    "value": ["item1", "item2", "item3"]
+                },
+                "itemKey": "currentItem",
+                "indexKey": "currentIndex",
+                "target": "test-2",
+                "next": "test-3",
+                "parallel": false
+            }
+        },
+        {
+            "id": "test-2",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "ref",
+                        "path": "test-1.currentItem"
+                    }
+                }
+            }
+        },
+        {
+            "id": "test-3",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "literal",
+                        "value": "Iterator completed"
+                    }
+                }
+            }
         }
-      }
-    },
-    {
-      "id": "process-users",
-      "type": "iterator",
-      "iterator": {
-        "array": { "type": "ref", "path": "fetch-users.users" },
-        "itemKey": "user",
-        "indexKey": "userIndex",
-        "target": "send-welcome-email",
-        "next": "generate-report"
-      }
-    },
-    {
-      "id": "send-welcome-email",
-      "type": "function-call",
-      "config": {
-        "fnName": "sendEmail",
-        "input": {
-          "to": { "type": "ref", "path": "$user.email" },
-          "subject": { "type": "literal", "value": "欢迎加入我们的平台！" },
-          "template": { "type": "literal", "value": "welcome" },
-          "userName": { "type": "ref", "path": "$user.name" },
-          "userIndex": { "type": "ref", "path": "$userIndex" }
-        }
-      }
-    },
-    {
-      "id": "generate-report",
-      "type": "function-call",
-      "config": {
-        "fnName": "generateReport",
-        "input": {
-          "iteratorResults": { "type": "ref", "path": "process-users" },
-          "totalUsers": { "type": "ref", "path": "process-users.total" },
-          "successfulEmails": { "type": "ref", "path": "process-users.successful" },
-          "failedEmails": { "type": "ref", "path": "process-users.failed" }
-        }
-      }
+    ],
+    "edges": [],
+    "root": "test-1",
+    "input": {
+        "url": "http://www.baidu.com",
+        "number": "1"
     }
-  ],
-  "edges": [
-    {
-      "from": "fetch-users",
-      "to": "process-users"
-    },
-    {
-      "from": "send-welcome-email",
-      "to": "process-users"
-    },
-    {
-      "from": "generate-report",
-      "to": "end"
-    }
-  ]
 }

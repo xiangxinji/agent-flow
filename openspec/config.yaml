@@ -1,0 +1,44 @@
+schema: spec-driven
+
+# 项目上下文
+# 当 AI 创建工件时会显示这些信息
+context: |
+  技术栈：TypeScript、Node.js、Hono、Mastra、lodash、zod、dotenv
+  项目结构：src/api/、src/core/、src/function/、src/mastra/、src/utils/
+  节点类型：branch（分支）、executor（执行器）、iterator（迭代器）、parallel（并行）、subgraph（子图）
+  核心功能：工作流引擎、Agent 集成、API 接口、函数调用
+  构建工具：TypeScript、ts-node、tsconfig-paths
+  测试：examples/tests/ 中的自定义测试运行器。 并且在创建或者引用 json 时，要根据 json 的书写内容来判断有没有 node 或者 edge 被执行到
+  禁止：在进行测试任务时修改或删除 src 中的源代码
+
+
+
+# 工件规则
+# 为特定类型的工件添加自定义规则
+rules:
+  proposal:
+    - 保持聚焦于工作流引擎功能
+    - 包含新节点类型的实现细节
+    - 始终考虑与现有组件的集成
+  tasks:
+    - 根据组件边界将任务分解为可管理的块
+    - 优先处理核心工作流引擎功能
+    - 为新功能包含测试步骤
+  code:
+    - 遵循 TypeScript 最佳实践
+    - 尽可能使用现有工具函数
+    - 保持组件间一致的命名约定
+    - 添加适当的类型定义
+  documentation:
+    - 在 docs/nodes/ 中记录新节点类型
+    - 为新功能包含使用示例
+    - 为重大变更更新 README.md
+
+assistant:
+  always_use_specs: true
+
+
+specs:
+  - testing.md
+  - tech-stack.md
+  - instructions.md

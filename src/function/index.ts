@@ -10,7 +10,6 @@ export class FunctionRegistry {
     constructor() {
         this.register(new ToJsonConvertFunction());
         this.register(new LogFunction());
-        this.register(new FetchFunction());
     }
 
     register(functionInstance: ExecutorFunction<any, any>) {
@@ -34,3 +33,7 @@ export class FunctionRegistry {
 
 
 export const functionRegistry = new FunctionRegistry();
+
+functionRegistry.register(new FetchFunction());
+functionRegistry.register(new LogFunction());
+functionRegistry.register(new ToJsonConvertFunction());

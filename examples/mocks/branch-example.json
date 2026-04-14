@@ -1,103 +1,62 @@
 {
-  "id": "branch-workflow-example",
-  "name": "分支节点示例工作流",
-  "version": "1.0.0",
-  "root": "analyze-user",
-  "nodes": [
-    {
-      "id": "analyze-user",
-      "type": "function-call",
-      "config": {
-        "fnName": "analyzeUser",
-        "input": {
-          "userId": { "type": "ref", "path": "$.userId" }
-        }
-      }
-    },
-    {
-      "id": "user-type-router",
-      "type": "branch",
-      "cases": [
+    "id": "test",
+    "name": "test",
+    "version": "1.0.0",
+    "nodes": [
         {
-          "condition": "$.analyze-user.userType === 'vip'",
-          "target": "handle-vip-user"
+            "id": "test-1",
+            "type": "branch",
+            "cases": [
+                {
+                    "condition": "$.number > 0",
+                    "target": "test-1-branch-1"
+                },
+                {
+                    "condition": "$.number <= 0",
+                    "target": "test-1-branch-2"
+                }
+            ]
         },
         {
-          "condition": "$.analyze-user.userType === 'regular'",
-          "target": "handle-regular-user"
+            "id": "test-2",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "ref",
+                        "path": "$.url"
+                    }
+                }
+            }
         },
         {
-          "condition": "$.analyze-user.userType === 'guest'",
-          "target": "handle-guest-user"
+            "id": "test-3",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "param": {
+                        "type": "ref",
+                        "path": "$.number"
+                    }
+                }
+            }
         }
-      ],
-      "next": "handle-unknown-user"
-    },
-    {
-      "id": "handle-vip-user",
-      "type": "function-call",
-      "config": {
-        "fnName": "handleVipUser",
-        "input": {
-          "user": { "type": "ref", "path": "analyze-user.user" },
-          "benefits": { "type": "literal", "value": ["priority-support", "exclusive-discounts"] }
+    ],
+    "edges": [
+        {
+            "from": "test-1-branch-1",
+            "to": "test-2"
+        },
+        {
+            "from": "test-1-branch-2",
+            "to": "test-3"
         }
-      }
-    },
-    {
-      "id": "handle-regular-user",
-      "type": "function-call",
-      "config": {
-        "fnName": "handleRegularUser",
-        "input": {
-          "user": { "type": "ref", "path": "analyze-user.user" },
-          "upgradeOffer": { "type": "literal", "value": true }
-        }
-      }
-    },
-    {
-      "id": "handle-guest-user",
-      "type": "function-call",
-      "config": {
-        "fnName": "handleGuestUser",
-        "input": {
-          "user": { "type": "ref", "path": "analyze-user.user" },
-          "promptRegistration": { "type": "literal", "value": true }
-        }
-      }
-    },
-    {
-      "id": "handle-unknown-user",
-      "type": "function-call",
-      "config": {
-        "fnName": "handleUnknownUser",
-        "input": {
-          "user": { "type": "ref", "path": "analyze-user.user" },
-          "logIssue": { "type": "literal", "value": true }
-        }
-      }
+    ],
+    "root": "test-1",
+    "input": {
+        "url": "http://www.baidu.com",
+        "number": "0"
     }
-  ],
-  "edges": [
-    {
-      "from": "analyze-user",
-      "to": "user-type-router"
-    },
-    {
-      "from": "handle-vip-user",
-      "to": "finalize-result"
-    },
-    {
-      "from": "handle-regular-user",
-      "to": "finalize-result"
-    },
-    {
-      "from": "handle-guest-user",
-      "to": "finalize-result"
-    },
-    {
-      "from": "handle-unknown-user",
-      "to": "finalize-result"
-    }
-  ]
 }
