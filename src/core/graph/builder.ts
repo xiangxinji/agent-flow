@@ -20,12 +20,12 @@ export class GraphBuilder {
 
             // 处理并行节点的分支 , 并将分支节点的主节点添加到节点映射中
             if (node.type === 'parallel') {
-                (node as IParallelNode).branches.forEach(i => {
+                (node as IParallelNode).parallel.branches.forEach(i => {
                     this.nodeMap.set(i, nodeInstance);
                 })
             }
             if (node.type === 'branch') {
-                (node as IBranchNode).cases.forEach(i => {
+                (node as IBranchNode).branch.cases.forEach(i => {
                     this.nodeMap.set(i.target, nodeInstance);
                 })
             }
@@ -52,12 +52,12 @@ export class GraphBuilder {
                  */
                 if (isParallelNode(fromNode)) {
                     if (fromNode.id === edge.from) {
-                        (fromNode as unknown as ParallelNode).next = edge.to;
+                        (fromNode as unknown as ParallelNode).parallel.next = edge.to;
                     } else {
                         const from = edge.from ; 
-                        const ind = (fromNode as unknown as ParallelNode).branches.indexOf(from);
+                        const ind = (fromNode as unknown as ParallelNode).parallel.branches.indexOf(from);
                         if(ind > -1) {
-                            (fromNode as unknown as ParallelNode).branches[ind] = edge.to;
+                            (fromNode as unknown as ParallelNode).parallel.branches[ind] = edge.to;
                         }
                     }
                     return;
@@ -69,12 +69,12 @@ export class GraphBuilder {
                  */
                 if (isBranchNode(fromNode)) {
                     if (fromNode.id === edge.from) {
-                        (fromNode as unknown as IBranchNode).next = edge.to;
+                        (fromNode as unknown as any).branch.next = edge.to;
                     } else {
                         const from = edge.from ; 
-                        const ind = (fromNode as unknown as IBranchNode).cases.findIndex(i => i.target === from);
+                        const ind = (fromNode as unknown as any).branch.cases.findIndex((i: any) => i.target === from);
                         if(ind > -1) {
-                            (fromNode as unknown as IBranchNode).cases[ind] = { ...(fromNode as unknown as IBranchNode).cases[ind], target: edge.to };
+                            (fromNode as unknown as any).branch.cases[ind] = { ...(fromNode as unknown as any).branch.cases[ind], target: edge.to };
                         }
                     }
                     return;

@@ -22,13 +22,13 @@ export class NodeFactory {
             return new ExecutorNode({ ...base, executor: ExecutorFactory.create(node.type as GraphNodeType, node) });
         } else if (node.type === 'branch') {
             const _node = node as IBranchNode;
-            return new BranchNode({ ...base, cases: _node.cases || [], next: _node.next || null });
+            return new BranchNode({ ...base, branch: _node.branch });
         } else if (node.type === 'iterator') {
             const _node = node as IIteratorNode;
             return new IteratorNode({ ...base, iterator: _node.iterator });
         } else if (node.type === 'parallel') {
             const _node = node as IParallelNode;
-            return new ParallelNode({ ...base, branches: _node.branches || [], next: _node.next || null });
+            return new ParallelNode({ ...base, parallel: _node.parallel });
         } else if (node.type === 'subgraph') {
             const _node = node as ISubGraphNode;
             return new SubGraphNode({ ...base, subgraph: _node.subgraph });

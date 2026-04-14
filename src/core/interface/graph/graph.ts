@@ -45,16 +45,21 @@ export interface IAgentNode extends INode {
 
 
 export interface IParallelNode extends INode {
-    branches: Array<string>
-    next?: string
+    parallel: {
+        branches: Array<string>
+        next?: string
+    }
 }
 
+
 export interface IBranchNode extends INode {
-    cases: Array<{
-        condition: string;
-        target: string;
-    }>
-    next?: string
+    branch: {
+        cases: Array<{
+            condition: string;
+            target: string;
+        }>
+        next?: string
+    }
 }
 
 export interface IIteratorNode extends INode {

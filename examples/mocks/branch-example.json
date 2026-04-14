@@ -6,16 +6,18 @@
         {
             "id": "test-1",
             "type": "branch",
-            "cases": [
-                {
-                    "condition": "$.number > 0",
-                    "target": "test-1-branch-1"
-                },
-                {
-                    "condition": "$.number <= 0",
-                    "target": "test-1-branch-2"
-                }
-            ]
+            "branch": {
+                "cases": [
+                    {
+                        "condition": "$.number > 0",
+                        "target": "test-1-branch-1"
+                    },
+                    {
+                        "condition": "$.number <= 0",
+                        "target": "test-1-branch-2"
+                    }
+                ]
+            }
         },
         {
             "id": "test-2",

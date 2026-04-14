@@ -6,10 +6,12 @@
         {
             "id": "test-1",
             "type": "parallel",
-            "branches": [
-                "test-1-parallel-1",
-                "test-1-parallel-2"
-            ]
+            "parallel": {
+                "branches": [
+                    "test-1-parallel-1",
+                    "test-1-parallel-2"
+                ]
+            }
         },
         {
             "id": "test-2",

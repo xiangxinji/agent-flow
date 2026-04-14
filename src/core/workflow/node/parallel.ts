@@ -3,28 +3,34 @@ import { BaseNode, NodeConfig } from "./base";
 import { ENGINE_STAGE } from "@/core/enums/engine";
 
 export type ParallelNodeConfig = Omit<NodeConfig & {
-    branches?: Array<string>;
-    next: string | null;
+    parallel: {
+        branches?: Array<string>;
+        next?: string;
+    };
 }, 'type'>;
 
 export class ParallelNode extends BaseNode {
-    public branches: Array<string>;
-    public next: string | null = null;
+    public parallel: {
+        branches: Array<string>;
+        next?: string;
+    };
 
     constructor(config: ParallelNodeConfig) {
         super({ ...config, type: 'parallel' });
-        this.branches = config.branches || [];
-        this.next = config.next || null;
+        this.parallel = {
+            branches: config.parallel?.branches || [],
+            next: config.parallel?.next
+        };
     }
 
     async onExecute(  ctx: EngineContext) {
         ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_BEFORE);
-        await Promise.all(this.branches.map(async (branch) => {
+        await Promise.all(this.parallel.branches.map(async (branch) => {
             return ctx.engine.runNode(branch);
         }));
         ctx.engine.emit(ENGINE_STAGE.NODE_EXECUTE_AFTER);
-        if (this.next) {
-            return await ctx.engine.runNode(this.next);
+        if (this.parallel.next) {
+            return await ctx.engine.runNode(this.parallel.next);
         }
     }
 }
