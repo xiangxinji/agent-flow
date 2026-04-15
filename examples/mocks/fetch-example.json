@@ -27,7 +27,7 @@
             "config": {
                 "fnName": "tool.log",
                 "input": {
-                    "param": {
+                    "input": {
                         "type": "ref",
                         "path": "test-1.output"
                     }

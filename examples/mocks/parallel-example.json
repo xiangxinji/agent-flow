@@ -19,7 +19,7 @@
             "config": {
                 "fnName": "tool.log",
                 "input": {
-                    "param": {
+                    "input": {
                         "type": "root",
                         "path": "url"
                     }
@@ -32,7 +32,7 @@
             "config": {
                 "fnName": "tool.log",
                 "input": {
-                    "param": {
+                    "input": {
                         "type": "root",
                         "path": "number"
                     }

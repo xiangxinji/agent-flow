@@ -1,472 +1,546 @@
-# 🧠 DAG Workflow Engine 实现报告（完整版）
+# AgentFlow
 
----
+工作流引擎 - 基于节点的工作流执行系统
 
-# 一、概览（Architecture Overview）
+## 项目简介
 
-## 🎯 目标
+AgentFlow 是一个强大的工作流引擎，基于节点系统设计，支持复杂的工作流定义和执行。它提供了直观的节点系统，包括分支节点、并行节点、迭代器节点等，使您能够构建灵活且可扩展的工作流。
 
-构建一个工业级 DAG Workflow Engine，具备：
+## 核心特性
 
-- 可视化编排（类似 Dify / n8n）
-- 支持 branch / parallel / merge
-- 强类型数据流（基于 schema）
-- 可扩展执行模型
+- **多种节点类型**：支持执行器、分支、迭代器、子图和并行节点
+- **图形化构建**：使用 GraphBuilder 从 JSON 定义构建工作流
+- **事件系统**：支持工作流执行过程中的事件监听和触发
+- **历史记录**：自动记录工作流执行历史
+- **Mastra 集成**：集成了 Mastra AI 框架，支持 AI 能力
+- **类型安全**：使用 TypeScript 开发，提供完整的类型定义
 
-同时复用 Mastra 的：
+## 技术栈
 
-- Step schema（input/output）
-- execute 执行能力
+- TypeScript
+- Node.js
+- Hono (HTTP 服务器)
+- Mastra (AI 框架)
+- Zod (数据验证)
 
----
+## 安装
 
-## 🧱 系统架构
+### 前提条件
 
-[ UI Editor ]
-      ↓
-[ Flow DSL JSON ]
-      ↓
-[ Graph Builder ]
-      ↓
-[ Execution Planner ]
-      ↓
-[ DAG Engine ]
-      ↓
-[ Step Runtime (Mastra) ]
+- Node.js 18.0 或更高版本
+- npm 或 pnpm 包管理器
 
----
+### 安装步骤
 
-## 🔑 核心设计原则
+1. 克隆项目
 
-1. Engine 控制流程（控制流）
-2. Step 控制计算（数据流）
-3. Workflow 不参与（避免声明式限制）
-4. Graph → Plan → Execution（分层）
+```bash
+git clone <repository-url>
+cd AgentFlow
+```
 
----
+2. 安装依赖
 
-# 二、Flow DSL 设计
+```bash
+# 使用 npm
+npm install
 
-## 🎯 目标
+# 或使用 pnpm
+pnpm install
+```
 
-表达完整流程结构
+3. 构建项目
 
----
+```bash
+npm run build
+```
 
-## 数据结构
+## 快速开始
 
-type Flow = {
-  nodes: Node[]
-  edges: Edge[]
-}
+### 1. 定义工作流
 
-type Node = {
-  id: string
-  type: string
-  config?: Record<string, any>
-}
+创建一个工作流定义文件（例如 `workflow.json`）：
 
-type Edge = {
-  from: string
-  to: string
-  condition?: string
-}
-
----
-
-## ✅ 达成效果
-
-- UI 可直接生成
-- 支持复杂连接关系
-- 支持条件分支
-
----
-
-# 三、Graph 构建
-
-## 🎯 目标
-
-构建 DAG（带依赖）
-
----
-
-type GraphNode = {
-  id: string
-  type: string
-  incoming: Edge[]
-  outgoing: Edge[]
-}
-
----
-
-function buildGraph(flow) {
-  const map = new Map()
-
-  for (const node of flow.nodes) {
-    map.set(node.id, {
-      ...node,
-      incoming: [],
-      outgoing: []
-    })
-  }
-
-  for (const edge of flow.edges) {
-    map.get(edge.from).outgoing.push(edge)
-    map.get(edge.to).incoming.push(edge)
-  }
-
-  return map
-}
-
----
-
-## ✅ 达成效果
-
-- 完整 DAG
-- 节点依赖关系明确
-
----
-
-# 四、拓扑排序
-
-## 🎯 目标
-
-- 保证执行顺序
-- 检测环
-
----
-
-function topoSort(graph) {
-  const inDegree = new Map()
-  const queue = []
-  const result = []
-
-  for (const node of graph.values()) {
-    inDegree.set(node.id, node.incoming.length)
-    if (node.incoming.length === 0) queue.push(node)
-  }
-
-  while (queue.length) {
-    const node = queue.shift()
-    result.push(node)
-
-    for (const edge of node.outgoing) {
-      const next = edge.to
-      inDegree.set(next, inDegree.get(next) - 1)
-      if (inDegree.get(next) === 0) {
-        queue.push(graph.get(next))
+```json
+{
+  "id": "example-workflow",
+  "name": "Example Workflow",
+  "version": "1.0.0",
+  "root": "start",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Hello, AgentFlow!"
+        }
       }
     }
-  }
-
-  if (result.length !== graph.size) {
-    throw new Error('Cycle detected')
-  }
-
-  return result
+  ],
+  "edges": []
 }
+```
 
----
+### 2. 运行工作流
 
-## ✅ 达成效果
+```typescript
+import { GraphBuilder, WorkflowEngine } from 'agentflow';
+import * as fs from 'fs';
 
-- 可执行顺序
-- 防止死循环
+// 读取工作流定义
+const workflowJson = JSON.parse(fs.readFileSync('workflow.json', 'utf8'));
 
----
+// 构建工作流
+const builder = new GraphBuilder(workflowJson);
+const workflow = builder.build();
 
-# 五、分支识别（Branch）
+// 创建引擎并运行
+const engine = new WorkflowEngine(workflow);
+const result = await engine.run();
 
-## 🎯 目标
+console.log('Workflow result:', result);
+```
 
-识别 if / else
+## API 文档
 
----
+### GraphBuilder
 
-function isBranchNode(node) {
-  return node.outgoing.some(e => e.condition)
-}
+用于从 JSON 定义构建工作流。
 
----
+```typescript
+import { GraphBuilder } from 'agentflow';
 
-function pickBranch(edges, context) {
-  for (const edge of edges) {
-    if (evalCondition(edge.condition, context)) {
-      return edge
+const builder = new GraphBuilder(workflowJson);
+const workflow = builder.build();
+```
+
+### WorkflowEngine
+
+用于运行工作流。
+
+```typescript
+import { WorkflowEngine } from 'agentflow';
+
+const engine = new WorkflowEngine(workflow);
+
+// 运行整个工作流
+const result = await engine.run(input);
+
+// 运行单个节点
+const nodeResult = await engine.runNode(nodeId);
+```
+
+### functionRegistry
+
+用于注册和管理函数。
+
+```typescript
+import { functionRegistry } from 'agentflow';
+
+// 注册函数
+functionRegistry.register('myFunction', (input) => {
+  return { result: input.value * 2 };
+});
+```
+
+## 节点类型
+
+### 1. Executor Node
+
+执行指定的函数。
+
+```json
+{
+  "id": "executor-1",
+  "type": "executor",
+  "executor": {
+    "function": "log",
+    "input": {
+      "message": "Hello World"
     }
   }
 }
+```
 
----
+### 2. Branch Node
 
-## ✅ 达成效果
+根据条件执行不同的分支。
 
-- 动态分支选择
-- 支持 runtime 条件
-
----
-
-# 六、并行识别（Parallel）
-
-## 🎯 目标
-
-识别可并行执行节点
-
----
-
-function getParallelNodes(node, graph) {
-  return node.outgoing
-    .filter(e => !e.condition)
-    .map(e => graph.get(e.to))
-}
-
----
-
-## ✅ 达成效果
-
-- 自动并行执行
-- 提升性能
-
----
-
-# 七、Execution Plan 构建（核心）
-
-## 🎯 目标
-
-统一执行结构
-
----
-
-type ExecutionUnit =
-  | { type: 'step', node }
-  | { type: 'parallel', nodes }
-  | { type: 'branch', node, branches }
-
----
-
-function buildExecutionPlan(graph) {
-  const plan = []
-
-  for (const node of graph.values()) {
-
-    if (isBranchNode(node)) {
-      plan.push({
-        type: 'branch',
-        node,
-        branches: node.outgoing
-      })
-      continue
-    }
-
-    if (node.outgoing.length > 1) {
-      plan.push({
-        type: 'parallel',
-        nodes: getParallelNodes(node, graph)
-      })
-      continue
-    }
-
-    plan.push({
-      type: 'step',
-      node
-    })
-  }
-
-  return plan
-}
-
----
-
-## ✅ 达成效果
-
-- 抽象执行语义
-- 解耦 graph 和 runtime
-
----
-
-# 八、Engine 执行器
-
-## 🎯 目标
-
-执行流程
-
----
-
-async function run(plan, context) {
-
-  for (const unit of plan) {
-
-    if (unit.type === 'step') {
-      await runNode(unit.node, context)
-    }
-
-    if (unit.type === 'parallel') {
-      await Promise.all(
-        unit.nodes.map(n => runNode(n, context))
-      )
-    }
-
-    if (unit.type === 'branch') {
-      const edge = pickBranch(unit.branches, context)
-      const nextNode = edge.to
-      await runNode(nextNode, context)
-    }
+```json
+{
+  "id": "branch-1",
+  "type": "branch",
+  "branch": {
+    "condition": "$.value > 10",
+    "cases": [
+      {
+        "condition": "$.value > 10",
+        "target": "node-a"
+      },
+      {
+        "condition": "$.value <= 10",
+        "target": "node-b"
+      }
+    ],
+    "default": "node-c"
   }
 }
+```
 
----
+### 3. Iterator Node
 
-## ✅ 达成效果
+迭代执行指定的节点。
 
-- 顺序
-- 并行
-- 分支
-
----
-
-# 九、Step 执行（Mastra 集成）
-
-## 🎯 目标
-
-利用 schema
-
----
-
-async function runNode(node, context) {
-  const step = stepRegistry[node.type]
-
-  const input = resolveInput(node, context)
-
-  const parsedInput = step.inputSchema.parse(input)
-
-  const output = await step.execute({
-    input: parsedInput
-  })
-
-  const parsedOutput = step.outputSchema.parse(output)
-
-  context[node.id] = parsedOutput
-
-  return parsedOutput
-}
-
----
-
-## ✅ 达成效果
-
-- 强类型执行
-- 安全运行
-
----
-
-# 十、Context 数据流
-
-## 🎯 目标
-
-节点通信
-
----
-
-type Context = {
-  [nodeId: string]: any
-}
-
----
-
-## ✅ 达成效果
-
-- 上下游数据共享
-- 支持复杂依赖
-
----
-
-# 十一、Schema 校验（关键能力）
-
-## 🎯 目标
-
-连接校验
-
----
-
-function validateConnection(from, to) {
-  return isCompatible(
-    from.outputSchema,
-    to.inputSchema
-  )
-}
-
----
-
-## ✅ 达成效果
-
-- UI 拖线时报错
-- 提前发现问题
-
----
-
-# 十二、扩展能力（建议实现）
-
-## 🚀 Retry
-
-async function runWithRetry(fn, retries = 3) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      return await fn()
-    } catch (e) {
-      if (i === retries - 1) throw e
-    }
+```json
+{
+  "id": "iterator-1",
+  "type": "iterator",
+  "iterator": {
+    "target": "process-item",
+    "collection": "$.items",
+    "item": "item"
   }
 }
+```
 
----
+### 4. Parallel Node
 
-## 🚀 Timeout
+并行执行多个分支。
 
-function withTimeout(promise, ms) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout')), ms)
-    )
-  ])
+```json
+{
+  "id": "parallel-1",
+  "type": "parallel",
+  "parallel": {
+    "branches": ["branch-1", "branch-2"],
+    "next": "merge"
+  }
 }
+```
 
----
+### 5. SubGraph Node
 
-## 🚀 日志系统
+执行子工作流。
 
-function log(nodeId, status, data) {
-  console.log({ nodeId, status, data })
+```json
+{
+  "id": "subgraph-1",
+  "type": "subgraph",
+  "subgraph": {
+    "workflow": "sub-workflow-id"
+  }
 }
+```
 
----
+## 示例
 
-# 🎯 最终总结
+### 基本执行器示例
 
-你实现的是：
+```json
+{
+  "id": "basic-example",
+  "name": "Basic Example",
+  "version": "1.0.0",
+  "root": "start",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Starting workflow"
+        }
+      }
+    },
+    {
+      "id": "process",
+      "type": "executor",
+      "executor": {
+        "function": "toJson",
+        "input": {
+          "data": { "key": "value" }
+        }
+      }
+    },
+    {
+      "id": "end",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Workflow completed"
+        }
+      }
+    }
+  ],
+  "edges": [
+    { "from": "start", "to": "process" },
+    { "from": "process", "to": "end" }
+  ]
+}
+```
 
-👉 DAG 调度系统（控制流）
+### 分支节点示例
 
-Mastra 提供：
+```json
+{
+  "id": "branch-example",
+  "name": "Branch Example",
+  "version": "1.0.0",
+  "root": "start",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Starting branch workflow"
+        }
+      }
+    },
+    {
+      "id": "branch",
+      "type": "branch",
+      "branch": {
+        "cases": [
+          {
+            "condition": "$.value > 5",
+            "target": "greater-than-5"
+          },
+          {
+            "condition": "$.value <= 5",
+            "target": "less-than-or-equal-5"
+          }
+        ]
+      }
+    },
+    {
+      "id": "greater-than-5",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Value is greater than 5"
+        }
+      }
+    },
+    {
+      "id": "less-than-or-equal-5",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Value is less than or equal to 5"
+        }
+      }
+    },
+    {
+      "id": "end",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Branch workflow completed"
+        }
+      }
+    }
+  ],
+  "edges": [
+    { "from": "start", "to": "branch" },
+    { "from": "greater-than-5", "to": "end" },
+    { "from": "less-than-or-equal-5", "to": "end" }
+  ]
+}
+```
 
-👉 类型安全执行单元（Step）
+### 并行节点示例
 
----
+```json
+{
+  "id": "parallel-example",
+  "name": "Parallel Example",
+  "version": "1.0.0",
+  "root": "start",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Starting parallel workflow"
+        }
+      }
+    },
+    {
+      "id": "parallel",
+      "type": "parallel",
+      "parallel": {
+        "branches": ["branch-1", "branch-2"],
+        "next": "end"
+      }
+    },
+    {
+      "id": "branch-1",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Executing branch 1"
+        }
+      }
+    },
+    {
+      "id": "branch-2",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Executing branch 2"
+        }
+      }
+    },
+    {
+      "id": "end",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Parallel workflow completed"
+        }
+      }
+    }
+  ],
+  "edges": [
+    { "from": "start", "to": "parallel" },
+    { "from": "branch-1", "to": "end" },
+    { "from": "branch-2", "to": "end" }
+  ]
+}
+```
 
-# 🚀 核心价值
+### 迭代器节点示例
 
-- 可扩展
-- 类型安全
-- 高可控
-- 工业级架构
+```json
+{
+  "id": "iterator-example",
+  "name": "Iterator Example",
+  "version": "1.0.0",
+  "root": "start",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Starting iterator workflow"
+        }
+      }
+    },
+    {
+      "id": "iterator",
+      "type": "iterator",
+      "iterator": {
+        "target": "process-item",
+        "collection": "$.items",
+        "item": "item"
+      }
+    },
+    {
+      "id": "process-item",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Processing item: $.item"
+        }
+      }
+    },
+    {
+      "id": "end",
+      "type": "executor",
+      "executor": {
+        "function": "log",
+        "input": {
+          "message": "Iterator workflow completed"
+        }
+      }
+    }
+  ],
+  "edges": [
+    { "from": "start", "to": "iterator" },
+    { "from": "process-item", "to": "end" }
+  ]
+}
+```
 
----
+## 开发
 
-# ✅ 下一步建议
+### 运行开发服务器
 
-1. 实现 DAG scheduler（支持复杂依赖）
-2. UI schema 自动生成
-3. 增加调试工具（execution trace）
-4. 支持循环（loop）
+```bash
+npm run dev
+```
 
----
+### 运行测试
+
+```bash
+# 运行所有测试
+npm test
+
+# 运行特定测试
+npm run test:specific
+
+# 监视模式运行测试
+npm run test:watch
+```
+
+### 类型检查
+
+```bash
+npm run type-check
+```
+
+## 项目结构
+
+```
+AgentFlow/
+├── src/
+│   ├── core/          # 核心代码
+│   │   ├── enums/     # 枚举类型
+│   │   ├── factory/   # 工厂类
+│   │   ├── graph/     # 图形构建
+│   │   ├── interface/ # 接口定义
+│   │   └── workflow/  # 工作流实现
+│   ├── api/           # API接口
+│   ├── function/      # 函数注册
+│   ├── mastra/        # Mastra集成
+│   └── utils/         # 工具函数
+├── examples/          # 示例代码
+│   ├── mocks/         # 模拟数据
+│   └── tests/         # 测试代码
+├── docs/              # 文档
+├── openspec/          # 规范定义
+├── package.json       # 项目配置
+└── tsconfig.json      # TypeScript配置
+```
+
+## 许可证
+
+ISC
+
+## 贡献
+
+欢迎贡献代码、报告问题或提出建议！
+
+## 联系方式
+
+如有任何问题或建议，请通过以下方式联系我们：
+
+- 项目地址：<repository-url>
+- 问题跟踪：<repository-url>/issues

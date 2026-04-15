@@ -24,7 +24,7 @@
   ],
   "author": "",
   "license": "ISC",
-  "description": "三层架构工作流引擎 - Router -> Planner -> Executor",
+  "description": "工作流引擎 - 基于节点的工作流执行系统",
   "dependencies": {
     "@hono/node-server": "^1.19.13",
     "@mastra/core": "^1.21.0",

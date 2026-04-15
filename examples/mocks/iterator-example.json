@@ -24,7 +24,7 @@
             "config": {
                 "fnName": "tool.log",
                 "input": {
-                    "param": {
+                    "input": {
                         "type": "ref",
                         "path": "test-1.currentItem"
                     }
@@ -37,7 +37,7 @@
             "config": {
                 "fnName": "tool.log",
                 "input": {
-                    "param": {
+                    "input": {
                         "type": "literal",
                         "value": "Iterator completed"
                     }

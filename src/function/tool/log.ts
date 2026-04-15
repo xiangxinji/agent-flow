@@ -5,6 +5,6 @@ export class LogFunction extends ExecutorFunction<CommonInput, void> {
         super('tool.log');
     }
     execute(input: CommonInput): void {
-        console.log(input.param);
+        console.log(input.input)     ;
     }
 }

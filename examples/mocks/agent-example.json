@@ -22,7 +22,7 @@
             "config": {
                 "fnName": "tool.log",
                 "input": {
-                    "param": {
+                    "input": {
                         "type": "template",
                         "template": "AI 的回答是：${test-1.output.text}"
                     }
