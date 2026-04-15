@@ -17,24 +17,6 @@ export class GraphBuilder {
         this.json.nodes.forEach(node => {
             const nodeInstance = NodeFactory.create(node);
             this.nodeMap.set(node.id, nodeInstance);
-
-            // 处理并行节点的分支 , 并将分支节点的主节点添加到节点映射中
-            if (node.type === 'parallel') {
-                (node as IParallelNode).parallel.branches.forEach(i => {
-                    this.nodeMap.set(i, nodeInstance);
-                })
-            }
-            if (node.type === 'branch') {
-                (node as IBranchNode).branch.cases.forEach(i => {
-                    this.nodeMap.set(i.target, nodeInstance);
-                })
-            }
-            if (node.type === 'iterator') {
-                // 对于 iterator 节点，我们需要特殊处理 target 节点
-                // 因为 iterator 节点会重复执行其 target 节点
-                const iteratorNode = node as IIteratorNode;
-                // 这里我们不需要额外处理，因为 iterator 节点通过 iterator.target 来指定目标节点
-            }
             wf.addNode(nodeInstance);
         });
     }
@@ -45,23 +27,7 @@ export class GraphBuilder {
             const toNode = this.nodeMap.get(edge.to);
             if (fromNode && toNode) {
 
-                /**
-                 * 处理并行节点的分支
-                 * @param fromNode 并行节点
-                 * @param edge 边
-                 */
-                if (isParallelNode(fromNode)) {
-                    if (fromNode.id === edge.from) {
-                        (fromNode as unknown as ParallelNode).parallel.next = edge.to;
-                    } else {
-                        const from = edge.from ; 
-                        const ind = (fromNode as unknown as ParallelNode).parallel.branches.indexOf(from);
-                        if(ind > -1) {
-                            (fromNode as unknown as ParallelNode).parallel.branches[ind] = edge.to;
-                        }
-                    }
-                    return;
-                }
+               
                 /**
                  * 处理分支节点的分支
                  * @param fromNode 分支节点

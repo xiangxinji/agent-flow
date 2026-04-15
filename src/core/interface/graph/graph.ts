@@ -3,7 +3,7 @@ import { Input } from "./input"
 /**
  * 前端配置的节点类型
  */
-export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'subgraph' | 'function-call'
+export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'function-call'
 
 
 export interface IFlow {
@@ -73,16 +73,7 @@ export interface IIteratorNode extends INode {
     }
 }
 
-export interface ISubGraphNode extends INode {
-    subgraph: {
-        workflowId: string;        // 子工作流的 ID
-        inputMapping?: Record<string, Input>;  // 输入参数映射
-        outputMapping?: Record<string, string>; // 输出结果映射
-        next?: string;             // 子工作流完成后的下一个节点
-        inheritState?: boolean;    // 是否继承父工作流的状态（默认 false）
-        onError?: 'continue' | 'stop'; // 错误处理策略
-    }
-}
+
 
 export interface IEdge {
     from: string

@@ -1,10 +1,9 @@
 import { BaseNode } from "../workflow/node/base";
-import { GraphNodeType, IBranchNode, INode, IParallelNode, IIteratorNode, ISubGraphNode } from "@/core/interface/graph/graph";
+import { GraphNodeType, IBranchNode, INode, IParallelNode, IIteratorNode,  } from "@/core/interface/graph/graph";
 import { ExecutorNode } from "../workflow/node/executor";
 import { BranchNode, } from "../workflow/node/branch";
 import { IteratorNode } from "../workflow/node/iterator";
 import { ParallelNode, ParallelNodeConfig } from "../workflow/node/parallel";
-import { SubGraphNode } from "../workflow/node/subgraph";
 import { ExecutorFactory } from "./executor-factory";
 
 export class NodeFactory {
@@ -29,10 +28,7 @@ export class NodeFactory {
         } else if (node.type === 'parallel') {
             const _node = node as IParallelNode;
             return new ParallelNode({ ...base, parallel: _node.parallel });
-        } else if (node.type === 'subgraph') {
-            const _node = node as ISubGraphNode;
-            return new SubGraphNode({ ...base, subgraph: _node.subgraph });
-        }
+        } 
         throw new Error(`Unknown node type: ${node.type}`);
     }
 }

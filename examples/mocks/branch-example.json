@@ -10,11 +10,11 @@
                 "cases": [
                     {
                         "condition": "$.number > 0",
-                        "target": "test-1-branch-1"
+                        "target": "test-2"
                     },
                     {
                         "condition": "$.number <= 0",
-                        "target": "test-1-branch-2"
+                        "target": "test-3"
                     }
                 ]
             }
@@ -38,22 +38,12 @@
             "config": {
                 "fnName": "tool.log",
                 "input": {
-                    "param": {
+                    "input": {
                         "type": "ref",
                         "path": "$.number"
                     }
                 }
             }
-        }
-    ],
-    "edges": [
-        {
-            "from": "test-1-branch-1",
-            "to": "test-2"
-        },
-        {
-            "from": "test-1-branch-2",
-            "to": "test-3"
         }
     ],
     "root": "test-1",

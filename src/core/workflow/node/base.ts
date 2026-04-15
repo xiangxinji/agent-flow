@@ -1,7 +1,7 @@
 
 import { EngineContext,  } from "../engine";
 
-export type NodeType = 'executor' | 'branch' | 'iterator' | 'subgraph' | 'parallel'
+export type NodeType = 'executor' | 'branch' | 'iterator' | 'parallel'
 export abstract class BaseNode {
     id: string;
     metadata?: Record<string, any>;

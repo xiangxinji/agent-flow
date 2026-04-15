@@ -8,9 +8,10 @@
             "type": "parallel",
             "parallel": {
                 "branches": [
-                    "test-1-parallel-1",
-                    "test-1-parallel-2"
-                ]
+                    "test-2",
+                    "test-3"
+                ],
+                "next": "test-4"
             }
         },
         {
@@ -20,8 +21,8 @@
                 "fnName": "tool.log",
                 "input": {
                     "input": {
-                        "type": "root",
-                        "path": "url"
+                        "type": "ref",
+                        "path": "$.url"
                     }
                 }
             }
@@ -33,22 +34,28 @@
                 "fnName": "tool.log",
                 "input": {
                     "input": {
-                        "type": "root",
-                        "path": "number"
+                        "type": "ref",
+                        "path": "$.number"
+                    }
+                }
+            }
+        },
+        {
+            "id": "test-4",
+            "type": "function-call",
+            "config": {
+                "fnName": "tool.log",
+                "input": {
+                    "input": {
+                        "type": "literal",
+                        "value": ["Running Completed"]
                     }
                 }
             }
         }
     ],
     "edges": [
-        {
-            "from": "test-1-parallel-1",
-            "to": "test-2"
-        },
-        {
-            "from": "test-1-parallel-2",
-            "to": "test-3"
-        }
+       
     ],
     "root": "test-1",
     "input": {

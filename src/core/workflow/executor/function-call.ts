@@ -32,9 +32,6 @@ export class FunctionCallExecutor extends BaseExecutor {
 
     async execute(node: ExecutorNode, runtime: ExecutorRuntime) {
         const input = EngineStateGetter.getInput<CommonInput>(runtime.engineContext.state, this.config.input)
-
-        console.log('==' , input);
-        
         runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.config]);
         if (!this.config.fnName) {
             return {
