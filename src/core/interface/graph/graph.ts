@@ -37,6 +37,7 @@ export interface IFunctionCallNode extends INode {
 export interface IAgentNode extends INode {
     agent: {
         instructions: string
+        model: string
         input : {
             prompt : Input
         }

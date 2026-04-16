@@ -8,6 +8,7 @@
             "type": "agent",
             "agent": {
                 "instructions": "你是一个智能助手，你可以回答用户的问题。",
+                "model": "gpt-4",
                 "input": {
                     "prompt": {
                         "type": "ref",
