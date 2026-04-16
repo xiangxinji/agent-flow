@@ -9,7 +9,7 @@ import { Input } from "@/core/interface/graph/input";
 import { EngineStateGetter } from "@/utils/state-parser";
 
 type AgentExecutorConfig = Omit<{
-    config: {
+    agent: {
         instructions: string
         input: {
             prompt: Input
@@ -20,7 +20,7 @@ type AgentExecutorConfig = Omit<{
 
 
 export class AgentExecutor extends BaseExecutor {
-    private config: {
+    private agent: {
         instructions: string
         input: {
             prompt: Input
@@ -28,11 +28,11 @@ export class AgentExecutor extends BaseExecutor {
     }
     constructor(config: AgentExecutorConfig) {
         super({ ...config, type: 'agent' });
-        this.config = config.config;
+        this.agent = config.agent;
     }
 
     async execute(node: ExecutorNode, runtime: ExecutorRuntime) {
-        const { instructions, input } = this.config;
+        const { instructions, input } = this.agent;
         const agent = createMastraAgent({ id: node.id, instructions });
         runtime.engineContext.engine.mastra.addAgent(agent);
         const _input = EngineStateGetter.getInput<{ prompt: string }>(runtime.engineContext.state, input);

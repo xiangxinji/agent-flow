@@ -12,7 +12,7 @@ import { CommonInput } from "@/function/base";
 
 
 type FunctionCallExecutorConfig = Omit<{
-    config: {
+    function: {
         fnName: string
         input: Record<string, Input>
     }
@@ -20,25 +20,25 @@ type FunctionCallExecutorConfig = Omit<{
 
 export class FunctionCallExecutor extends BaseExecutor {
 
-    private config: {
+    private function: {
         fnName: string
         input: Record<string, Input>
     };
 
     constructor(config: FunctionCallExecutorConfig) {
         super({ ...config, type: 'function-call' });
-        this.config = config.config;
+        this.function = config.function;
     }
 
     async execute(node: ExecutorNode, runtime: ExecutorRuntime) {
-        const input = EngineStateGetter.getInput<CommonInput>(runtime.engineContext.state, this.config.input)
-        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.config]);
-        if (!this.config.fnName) {
+        const input = EngineStateGetter.getInput<CommonInput>(runtime.engineContext.state, this.function.input)
+        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.function]);
+        if (!this.function.fnName) {
             return {
             }
         }
-        const output = functionRegistry.call(this.config.fnName, input);
-        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.config]);
+        const output = functionRegistry.call(this.function.fnName, input);
+        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.function]);
         return output
     }
 }

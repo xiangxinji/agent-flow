@@ -21,7 +21,7 @@
         {
             "id": "test-2",
             "type": "function-call",
-            "config": {
+            "function": {
                 "fnName": "tool.log",
                 "input": {
                     "input": {
@@ -34,7 +34,7 @@
         {
             "id": "test-3",
             "type": "function-call",
-            "config": {
+            "function": {
                 "fnName": "tool.log",
                 "input": {
                     "input": {

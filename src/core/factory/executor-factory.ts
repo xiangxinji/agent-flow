@@ -6,10 +6,10 @@ import { FunctionCallExecutor } from "../workflow/executor/function-call";
 export class ExecutorFactory {
     static create(type: GraphNodeType, node: INode): BaseExecutor {
         if (type === 'agent') {
-            return new AgentExecutor({ config: (node as IAgentNode).config });
+            return new AgentExecutor({ agent: (node as IAgentNode).agent });
         }
         if (type === 'function-call') {
-            return new FunctionCallExecutor({ config: (node as IFunctionCallNode).config });
+            return new FunctionCallExecutor({ function: (node as IFunctionCallNode).function });
         }
         throw new Error(`Unknown executor type: ${type}`);
     }

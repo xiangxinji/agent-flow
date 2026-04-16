@@ -27,7 +27,7 @@ export interface INode {
 
 
 export interface IFunctionCallNode extends INode {
-    config: {
+    function: {
         fnName: string
         input: Record<string, Input>
     }
@@ -35,7 +35,7 @@ export interface IFunctionCallNode extends INode {
 
 
 export interface IAgentNode extends INode {
-    config: {
+    agent: {
         instructions: string
         input : {
             prompt : Input

@@ -6,7 +6,7 @@
         {
             "id": "test-1",
             "type": "agent",
-            "config": {
+            "agent": {
                 "instructions": "你是一个智能助手，你可以回答用户的问题。",
                 "input": {
                     "prompt": {
@@ -19,7 +19,7 @@
         {
             "id": "test-2",
             "type": "function-call",
-            "config": {
+            "function": {
                 "fnName": "tool.log",
                 "input": {
                     "input": {
