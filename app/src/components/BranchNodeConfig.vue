@@ -1,17 +1,17 @@
 <template>
   <div class="config">
     <div class="field">
-      <label>Cases</label>
+      <label>条件分支</label>
       <div v-for="(caseItem, index) in localConfig.cases" :key="index" class="case">
-        <input type="text" v-model="caseItem.condition" @input="updateConfig" placeholder="Condition..." />
-        <input type="text" v-model="caseItem.target" @input="updateConfig" placeholder="Target..." />
+        <input type="text" v-model="caseItem.condition" @input="updateConfig" placeholder="条件..." />
+        <input type="text" v-model="caseItem.target" @input="updateConfig" placeholder="目标节点..." />
         <button @click="removeCase(index)" class="remove">×</button>
       </div>
-      <button @click="addCase" class="add">+ Add Case</button>
+      <button @click="addCase" class="add">+ 添加分支</button>
     </div>
     <div class="field">
-      <label>Next (Optional)</label>
-      <input type="text" v-model="localConfig.next" @input="updateConfig" placeholder="Next node..." />
+      <label>下一步（可选）</label>
+      <input type="text" v-model="localConfig.next" @input="updateConfig" placeholder="下一步节点..." />
     </div>
   </div>
 </template>

@@ -1,24 +1,24 @@
 <template>
   <div class="config">
     <div class="field">
-      <label>Array</label>
-      <input type="text" v-model="localConfig.array" @input="updateConfig" placeholder="Array source..." />
+      <label>数组</label>
+      <input type="text" v-model="localConfig.array" @input="updateConfig" placeholder="数组数据源..." />
     </div>
     <div class="field">
-      <label>Target</label>
-      <input type="text" v-model="localConfig.target" @input="updateConfig" placeholder="Target node..." />
+      <label>目标节点</label>
+      <input type="text" v-model="localConfig.target" @input="updateConfig" placeholder="目标节点..." />
     </div>
     <div class="field">
-      <label>Item Key</label>
+      <label>元素键名</label>
       <input type="text" v-model="localConfig.itemKey" @input="updateConfig" placeholder="item" />
     </div>
     <div class="field">
-      <label>Index Key</label>
+      <label>索引键名</label>
       <input type="text" v-model="localConfig.indexKey" @input="updateConfig" placeholder="index" />
     </div>
     <div class="field">
-      <label>Next (Optional)</label>
-      <input type="text" v-model="localConfig.next" @input="updateConfig" placeholder="Next node..." />
+      <label>下一步（可选）</label>
+      <input type="text" v-model="localConfig.next" @input="updateConfig" placeholder="下一步节点..." />
     </div>
   </div>
 </template>

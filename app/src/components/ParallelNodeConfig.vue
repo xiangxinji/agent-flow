@@ -1,16 +1,16 @@
 <template>
   <div class="config">
     <div class="field">
-      <label>Branches</label>
+      <label>分支列表</label>
       <div v-for="(branch, index) in localConfig.branches" :key="index" class="branch">
-        <input type="text" v-model="localConfig.branches[index]" @input="updateConfig" placeholder="Branch node..." />
+        <input type="text" v-model="localConfig.branches[index]" @input="updateConfig" placeholder="分支节点..." />
         <button @click="removeBranch(index)" class="remove">×</button>
       </div>
-      <button @click="addBranch" class="add">+ Add Branch</button>
+      <button @click="addBranch" class="add">+ 添加分支</button>
     </div>
     <div class="field">
-      <label>Next (Optional)</label>
-      <input type="text" v-model="localConfig.next" @input="updateConfig" placeholder="Next node..." />
+      <label>下一步（可选）</label>
+      <input type="text" v-model="localConfig.next" @input="updateConfig" placeholder="下一步节点..." />
     </div>
   </div>
 </template>

@@ -20,12 +20,12 @@ import { ref } from 'vue'
 import type { GraphNodeType } from '@/types/workflow'
 
 const nodeTypes = ref([
-  { type: 'agent' as GraphNodeType, label: 'Agent', icon: '🤖' },
-  { type: 'function-call' as GraphNodeType, label: 'Function', icon: '⚡' },
-  { type: 'branch' as GraphNodeType, label: 'Branch', icon: '🔀' },
-  { type: 'iterator' as GraphNodeType, label: 'Iterator', icon: '🔄' },
-  { type: 'parallel' as GraphNodeType, label: 'Parallel', icon: '⚡' },
-  { type: 'intent-recognition' as GraphNodeType, label: 'Intent', icon: '🎯' }
+  { type: 'agent' as GraphNodeType, label: '智能代理', icon: '🤖' },
+  { type: 'function-call' as GraphNodeType, label: '函数调用', icon: '⚡' },
+  { type: 'branch' as GraphNodeType, label: '分支', icon: '🔀' },
+  { type: 'iterator' as GraphNodeType, label: '迭代器', icon: '🔄' },
+  { type: 'parallel' as GraphNodeType, label: '并行', icon: '⚡' },
+  { type: 'intent-recognition' as GraphNodeType, label: '意图识别', icon: '🎯' }
 ])
 
 const onDragStart = (event: DragEvent, nodeType: GraphNodeType) => {

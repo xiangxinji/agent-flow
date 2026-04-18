@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <div class="header">
-      <h3>Config</h3>
+      <h3>配置</h3>
       <button @click="close" class="close">×</button>
     </div>
     <div class="content">
@@ -10,7 +10,7 @@
         <input type="text" :value="node.id" disabled />
       </div>
       <div class="field">
-        <label>Type</label>
+        <label>类型</label>
         <input type="text" :value="node.type" disabled />
       </div>
       <AgentNodeConfig v-if="node.type === 'agent'" :node="node" />

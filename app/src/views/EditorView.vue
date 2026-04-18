@@ -3,8 +3,8 @@
     <NodePalette />
     <div class="main">
       <div class="toolbar">
-        <button @click="exportWorkflow" class="btn">Export</button>
-        <button @click="importWorkflow" class="btn">Import</button>
+        <button @click="exportWorkflow" class="btn">导出</button>
+        <button @click="importWorkflow" class="btn">导入</button>
         <input ref="fileInput" type="file" accept=".json" @change="onFileSelect" style="display: none" />
       </div>
       <div class="canvas" @drop="onDrop" @dragover.prevent>
@@ -83,7 +83,7 @@ const onFileSelect = (event: Event) => {
       const workflow = JSON.parse(e.target?.result as string)
       workflowStore.setWorkflow(workflow)
     } catch {
-      alert('Invalid workflow file')
+      alert('无效的工作流文件')
     }
   }
   reader.readAsText(file)

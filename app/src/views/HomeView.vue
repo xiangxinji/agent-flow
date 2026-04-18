@@ -2,8 +2,8 @@
   <div class="home">
     <div class="content">
       <h1>AgentFlow</h1>
-      <p>Visual Workflow Editor</p>
-      <router-link to="/editor" class="btn">Open Editor</router-link>
+      <p>可视化工作流编辑器</p>
+      <router-link to="/editor" class="btn">打开编辑器</router-link>
     </div>
   </div>
 </template>

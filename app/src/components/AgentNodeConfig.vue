@@ -1,11 +1,11 @@
 <template>
   <div class="config">
     <div class="field">
-      <label>Instructions</label>
-      <textarea v-model="localConfig.instructions" @input="updateConfig" placeholder="Agent instructions..." />
+      <label>指令</label>
+      <textarea v-model="localConfig.instructions" @input="updateConfig" placeholder="代理指令..." />
     </div>
     <div class="field">
-      <label>Model</label>
+      <label>模型</label>
       <select v-model="localConfig.model" @change="updateConfig">
         <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
         <option value="gpt-4">GPT-4</option>
@@ -13,8 +13,8 @@
       </select>
     </div>
     <div class="field">
-      <label>Prompt</label>
-      <input type="text" v-model="localConfig.input.prompt" @input="updateConfig" placeholder="Prompt input..." />
+      <label>提示词</label>
+      <input type="text" v-model="localConfig.input.prompt" @input="updateConfig" placeholder="提示词输入..." />
     </div>
   </div>
 </template>

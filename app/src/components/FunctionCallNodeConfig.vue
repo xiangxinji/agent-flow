@@ -1,11 +1,11 @@
 <template>
   <div class="config">
     <div class="field">
-      <label>Function</label>
-      <input type="text" v-model="localConfig.fnName" @input="updateConfig" placeholder="Function name..." />
+      <label>函数</label>
+      <input type="text" v-model="localConfig.fnName" @input="updateConfig" placeholder="函数名称..." />
     </div>
     <div class="field">
-      <label>Input</label>
+      <label>输入</label>
       <textarea v-model="inputJson" @input="updateInputConfig" placeholder='{"key": "value"}' />
     </div>
   </div>

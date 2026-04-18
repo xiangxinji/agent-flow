@@ -1,11 +1,11 @@
 <template>
   <div class="config">
     <div class="field">
-      <label>Instructions</label>
-      <textarea v-model="localConfig.agent.instructions" @input="updateConfig" placeholder="Agent instructions..." />
+      <label>指令</label>
+      <textarea v-model="localConfig.agent.instructions" @input="updateConfig" placeholder="代理指令..." />
     </div>
     <div class="field">
-      <label>Model</label>
+      <label>模型</label>
       <select v-model="localConfig.agent.model" @change="updateConfig">
         <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
         <option value="gpt-4">GPT-4</option>
@@ -13,21 +13,21 @@
       </select>
     </div>
     <div class="field">
-      <label>Input</label>
-      <input type="text" v-model="localConfig.input.data" @input="updateConfig" placeholder="Input data..." />
+      <label>输入数据</label>
+      <input type="text" v-model="localConfig.input.data" @input="updateConfig" placeholder="输入数据..." />
     </div>
     <div class="field">
-      <label>Intentions</label>
+      <label>意图列表</label>
       <div v-for="(intention, index) in localConfig.intentions" :key="index" class="intention">
-        <input type="text" v-model="intention.name" @input="updateConfig" placeholder="Intent name..." />
-        <input type="text" v-model="intention.target" @input="updateConfig" placeholder="Target..." />
+        <input type="text" v-model="intention.name" @input="updateConfig" placeholder="意图名称..." />
+        <input type="text" v-model="intention.target" @input="updateConfig" placeholder="目标节点..." />
         <button @click="removeIntention(index)" class="remove">×</button>
       </div>
-      <button @click="addIntention" class="add">+ Add Intention</button>
+      <button @click="addIntention" class="add">+ 添加意图</button>
     </div>
     <div class="field">
-      <label>Default (Optional)</label>
-      <input type="text" v-model="localConfig.defaultTarget" @input="updateConfig" placeholder="Default target..." />
+      <label>默认目标（可选）</label>
+      <input type="text" v-model="localConfig.defaultTarget" @input="updateConfig" placeholder="默认目标节点..." />
     </div>
   </div>
 </template>
