@@ -70,11 +70,14 @@ npm run build
   "nodes": [
     {
       "id": "start",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Hello, AgentFlow!"
+          "input": {
+            "type": "literal",
+            "value": "Hello, AgentFlow!"
+          }
         }
       }
     }
@@ -147,18 +150,21 @@ functionRegistry.register('myFunction', (input) => {
 
 ## 节点类型
 
-### 1. Executor Node
+### 1. Executor Node (Function Call)
 
 执行指定的函数。
 
 ```json
 {
   "id": "executor-1",
-  "type": "executor",
-  "executor": {
-    "function": "log",
+  "type": "function-call",
+  "function": {
+    "fnName": "tool.log",
     "input": {
-      "message": "Hello World"
+      "input": {
+        "type": "literal",
+        "value": "Hello World"
+      }
     }
   }
 }
@@ -173,7 +179,6 @@ functionRegistry.register('myFunction', (input) => {
   "id": "branch-1",
   "type": "branch",
   "branch": {
-    "condition": "$.value > 10",
     "cases": [
       {
         "condition": "$.value > 10",
@@ -184,7 +189,7 @@ functionRegistry.register('myFunction', (input) => {
         "target": "node-b"
       }
     ],
-    "default": "node-c"
+    "next": "node-c"
   }
 }
 ```
@@ -199,8 +204,14 @@ functionRegistry.register('myFunction', (input) => {
   "type": "iterator",
   "iterator": {
     "target": "process-item",
-    "collection": "$.items",
-    "item": "item"
+    "array": {
+      "type": "literal",
+      "value": ["item1", "item2", "item3"]
+    },
+    "itemKey": "currentItem",
+    "indexKey": "currentIndex",
+    "next": "end",
+    "parallel": false
   }
 }
 ```
@@ -220,16 +231,36 @@ functionRegistry.register('myFunction', (input) => {
 }
 ```
 
-### 5. SubGraph Node
+### 5. Intent Recognition Node
 
-执行子工作流。
+意图识别节点，用于识别用户意图并路由到对应目标。
 
 ```json
 {
-  "id": "subgraph-1",
-  "type": "subgraph",
-  "subgraph": {
-    "workflow": "sub-workflow-id"
+  "id": "intent-1",
+  "type": "intent-recognition",
+  "intentRecognition": {
+    "agent": {
+      "instructions": "你是一个意图识别助手",
+      "model": "gpt-4"
+    },
+    "input": {
+      "data": {
+        "type": "ref",
+        "path": "$.query"
+      }
+    },
+    "intentions": [
+      {
+        "name": "查询天气",
+        "target": "weather-node"
+      },
+      {
+        "name": "播放音乐",
+        "target": "music-node"
+      }
+    ],
+    "defaultTarget": "default-node"
   }
 }
 ```
@@ -247,31 +278,40 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Starting workflow"
+          "input": {
+            "type": "literal",
+            "value": "Starting workflow"
+          }
         }
       }
     },
     {
       "id": "process",
-      "type": "executor",
-      "executor": {
-        "function": "toJson",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.toJson",
         "input": {
-          "data": { "key": "value" }
+          "input": {
+            "type": "literal",
+            "value": { "key": "value" }
+          }
         }
       }
     },
     {
       "id": "end",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Workflow completed"
+          "input": {
+            "type": "literal",
+            "value": "Workflow completed"
+          }
         }
       }
     }
@@ -294,11 +334,14 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Starting branch workflow"
+          "input": {
+            "type": "literal",
+            "value": "Starting branch workflow"
+          }
         }
       }
     },
@@ -315,42 +358,54 @@ functionRegistry.register('myFunction', (input) => {
             "condition": "$.value <= 5",
             "target": "less-than-or-equal-5"
           }
-        ]
+        ],
+        "next": "end"
       }
     },
     {
       "id": "greater-than-5",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Value is greater than 5"
+          "input": {
+            "type": "literal",
+            "value": "Value is greater than 5"
+          }
         }
       }
     },
     {
       "id": "less-than-or-equal-5",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Value is less than or equal to 5"
+          "input": {
+            "type": "literal",
+            "value": "Value is less than or equal to 5"
+          }
         }
       }
     },
     {
       "id": "end",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Branch workflow completed"
+          "input": {
+            "type": "literal",
+            "value": "Branch workflow completed"
+          }
         }
       }
     }
   ],
   "edges": [
     { "from": "start", "to": "branch" },
+    { "from": "branch", "to": "greater-than-5" },
+    { "from": "branch", "to": "less-than-or-equal-5" },
     { "from": "greater-than-5", "to": "end" },
     { "from": "less-than-or-equal-5", "to": "end" }
   ]
@@ -368,11 +423,14 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Starting parallel workflow"
+          "input": {
+            "type": "literal",
+            "value": "Starting parallel workflow"
+          }
         }
       }
     },
@@ -386,37 +444,48 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "branch-1",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Executing branch 1"
+          "input": {
+            "type": "literal",
+            "value": "Executing branch 1"
+          }
         }
       }
     },
     {
       "id": "branch-2",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Executing branch 2"
+          "input": {
+            "type": "literal",
+            "value": "Executing branch 2"
+          }
         }
       }
     },
     {
       "id": "end",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Parallel workflow completed"
+          "input": {
+            "type": "literal",
+            "value": "Parallel workflow completed"
+          }
         }
       }
     }
   ],
   "edges": [
     { "from": "start", "to": "parallel" },
+    { "from": "parallel", "to": "branch-1" },
+    { "from": "parallel", "to": "branch-2" },
     { "from": "branch-1", "to": "end" },
     { "from": "branch-2", "to": "end" }
   ]
@@ -434,11 +503,14 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Starting iterator workflow"
+          "input": {
+            "type": "literal",
+            "value": "Starting iterator workflow"
+          }
         }
       }
     },
@@ -447,33 +519,46 @@ functionRegistry.register('myFunction', (input) => {
       "type": "iterator",
       "iterator": {
         "target": "process-item",
-        "collection": "$.items",
-        "item": "item"
+        "array": {
+          "type": "literal",
+          "value": ["item1", "item2", "item3"]
+        },
+        "itemKey": "currentItem",
+        "indexKey": "currentIndex",
+        "next": "end",
+        "parallel": false
       }
     },
     {
       "id": "process-item",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Processing item: $.item"
+          "input": {
+            "type": "ref",
+            "path": "iterator.currentItem"
+          }
         }
       }
     },
     {
       "id": "end",
-      "type": "executor",
-      "executor": {
-        "function": "log",
+      "type": "function-call",
+      "function": {
+        "fnName": "tool.log",
         "input": {
-          "message": "Iterator workflow completed"
+          "input": {
+            "type": "literal",
+            "value": "Iterator workflow completed"
+          }
         }
       }
     }
   ],
   "edges": [
     { "from": "start", "to": "iterator" },
+    { "from": "iterator", "to": "process-item" },
     { "from": "process-item", "to": "end" }
   ]
 }
