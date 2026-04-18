@@ -19,7 +19,6 @@ type IntentRecognitionExecutorConfig = Omit<{
             target: string;
         }>;
         defaultTarget?: string;
-        outputKey?: string;
     };
 } & BaseExecutorConfig, 'type'>;
 
@@ -37,7 +36,6 @@ export class IntentRecognitionExecutor extends BaseExecutor {
             target: string;
         }>;
         defaultTarget?: string;
-        outputKey?: string;
     };
 
     constructor(config: IntentRecognitionExecutorConfig) {
@@ -84,19 +82,9 @@ ${JSON.stringify(inputData, null, 2)}
                 }
             }
             
-            // 5. 存储意图识别结果
-            const outputKey = this.config.outputKey || 'intentResult';
-            const result = {
-                intent: recognizedIntent,
-                target: targetNodeId,
-                timestamp: new Date().toISOString()
-            };
-            
-            runtime.engineContext.state.set(outputKey, result);
-            
-            // 6. 返回结果
+            // 5. 返回结果（外部会包裹成 { output: xx }）
             return {
-                [outputKey]: result,
+                intent: recognizedIntent,
                 target: targetNodeId
             };
             

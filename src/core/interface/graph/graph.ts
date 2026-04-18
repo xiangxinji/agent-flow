@@ -88,7 +88,6 @@ export interface IIntentRecognitionNode extends INode {
             target: string
         }>
         defaultTarget?: string
-        outputKey?: string
     }
 }
 

@@ -18,7 +18,6 @@ export type IntentRecognitionNodeConfig = Omit<NodeConfig & {
             target: string;
         }>;
         defaultTarget?: string;
-        outputKey?: string;
     };
 }, 'type'>;
 
@@ -36,7 +35,6 @@ export class IntentRecognitionNode extends BaseNode {
             target: string;
         }>;
         defaultTarget?: string;
-        outputKey?: string;
     };
 
     constructor(config: IntentRecognitionNodeConfig) {
@@ -45,8 +43,7 @@ export class IntentRecognitionNode extends BaseNode {
             agent: config.intentRecognition.agent,
             input: config.intentRecognition.input,
             intentions: config.intentRecognition.intentions || [],
-            defaultTarget: config.intentRecognition.defaultTarget,
-            outputKey: config.intentRecognition.outputKey || 'intentResult'
+            defaultTarget: config.intentRecognition.defaultTarget
         };
     }
 
@@ -91,16 +88,7 @@ ${JSON.stringify(inputData, null, 2)}
                 }
             }
             
-            // 5. 存储意图识别结果
-            const result = {
-                intent: recognizedIntent,
-                target: targetNodeId,
-                timestamp: new Date().toISOString()
-            };
-            
-            ctx.engine.state.set(this.intentRecognition.outputKey!, result);
-            
-            // 6. 路由到目标节点
+            // 5. 路由到目标节点
             if (targetNodeId) {
                 await ctx.engine.runNode(targetNodeId);
             }

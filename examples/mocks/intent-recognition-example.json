@@ -28,8 +28,7 @@
             "target": "news-node"
           }
         ],
-        "defaultTarget": "fallback-node",
-        "outputKey": "intentResult"
+        "defaultTarget": "fallback-node"
       }
     },
     {

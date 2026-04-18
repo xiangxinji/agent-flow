@@ -17,7 +17,6 @@ The intent-recognition node SHALL accept the following configuration:
 - `input`: Input data source configuration
 - `intentions`: Mapping of intent names to target node IDs
 - `defaultTarget`: Optional default target node ID for unrecognized intents
-- `outputKey`: Optional key to store intent recognition results in state
 
 #### Scenario: Full Configuration
 - **WHEN** an intent-recognition node is configured with all required fields
@@ -32,7 +31,7 @@ The intent-recognition node SHALL:
 1. Retrieve input data from the specified source
 2. Use the configured agent to analyze the input and recognize intent
 3. Map the recognized intent to a target node using the intentions mapping
-4. Store the intent recognition result in the state
+4. Return the intent recognition result directly (external system will wrap as `{ output: xx }`)
 5. Route to the mapped target node
 6. Route to the default target if no intent is recognized
 
@@ -44,16 +43,16 @@ The intent-recognition node SHALL:
 - **WHEN** input state contains data that doesn't match any configured intent
 - **THEN** the node SHALL route to the default target if configured, or stop execution
 
-### Requirement: Intent Result Storage
-The intent-recognition node SHALL store the intent recognition result in the state using the configured `outputKey` or a default key if not specified.
+### Requirement: Intent Result Output
+The intent-recognition node SHALL return the intent recognition result directly without storing it in state. The external system will wrap the result as `{ output: xx }`.
 
-#### Scenario: Result Storage with Custom Key
-- **WHEN** an intent-recognition node is configured with a custom outputKey
-- **THEN** the node SHALL store the intent recognition result using the custom key
+#### Scenario: Direct Result Return
+- **WHEN** the intent-recognition node completes intent recognition
+- **THEN** the node SHALL return the result directly containing `intent` and `target` fields
 
-#### Scenario: Result Storage with Default Key
-- **WHEN** an intent-recognition node is not configured with an outputKey
-- **THEN** the node SHALL store the intent recognition result using the default key
+#### Scenario: Result Structure
+- **WHEN** the intent-recognition node returns a result
+- **THEN** the result SHALL contain `intent` (recognized intent name) and `target` (target node ID)
 
 ### Requirement: Agent Integration
 The intent-recognition node SHALL use the existing Mastra agent capabilities for intent recognition.
@@ -69,16 +68,11 @@ The intent-recognition node SHALL use the existing Mastra agent capabilities for
 ### Requirement: State Management Integration
 The intent-recognition node SHALL integrate with the existing state management system to:
 - Retrieve input data from the state
-- Store intent recognition results in the state
 - Pass state to downstream nodes
 
 #### Scenario: State Input
 - **WHEN** the intent-recognition node retrieves input from the state
 - **THEN** the node SHALL use the configured input source to get data from the state
-
-#### Scenario: State Output
-- **WHEN** the intent-recognition node stores results in the state
-- **THEN** the node SHALL add the intent recognition result to the state
 
 ## MODIFIED Requirements
 
