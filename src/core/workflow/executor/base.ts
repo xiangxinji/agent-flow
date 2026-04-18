@@ -3,7 +3,7 @@ import { ExecutorNode } from "../node/executor";
 import { ExecutorRuntime } from "../runtime";
 
 
-export type ExecutorType = 'agent' | 'function-call';
+export type ExecutorType = 'agent' | 'function-call' | 'intent-recognition';
 
 
 export type BaseExecutorConfig = {

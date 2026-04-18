@@ -1,0 +1,78 @@
+{
+  "id": "intent-recognition-example",
+  "name": "Intent Recognition Example",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "root",
+      "type": "intent-recognition",
+      "intentRecognition": {
+        "agent": {
+          "instructions": "You are an intent recognition system. Analyze the user's message and determine their intent from the provided list.",
+          "model": "gpt-3.5-turbo"
+        },
+        "input": {
+          "data": "$input.message"
+        },
+        "intentions": [
+          {
+            "name": "greeting",
+            "target": "greeting-node"
+          },
+          {
+            "name": "weather",
+            "target": "weather-node"
+          },
+          {
+            "name": "news",
+            "target": "news-node"
+          }
+        ],
+        "defaultTarget": "fallback-node",
+        "outputKey": "intentResult"
+      }
+    },
+    {
+      "id": "greeting-node",
+      "type": "function-call",
+      "function": {
+        "fnName": "greetUser",
+        "input": {
+          "name": "$input.name"
+        }
+      }
+    },
+    {
+      "id": "weather-node",
+      "type": "function-call",
+      "function": {
+        "fnName": "getWeather",
+        "input": {
+          "location": "$input.location"
+        }
+      }
+    },
+    {
+      "id": "news-node",
+      "type": "function-call",
+      "function": {
+        "fnName": "getNews",
+        "input": {
+          "category": "$input.category"
+        }
+      }
+    },
+    {
+      "id": "fallback-node",
+      "type": "function-call",
+      "function": {
+        "fnName": "handleFallback",
+        "input": {
+          "message": "$input.message"
+        }
+      }
+    }
+  ],
+  "edges": [],
+  "root": "root"
+}

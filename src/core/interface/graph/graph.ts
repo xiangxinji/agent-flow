@@ -3,7 +3,7 @@ import { Input } from "./input"
 /**
  * 前端配置的节点类型
  */
-export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'function-call'
+export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'function-call' | 'intent-recognition'
 
 
 export interface IFlow {
@@ -71,6 +71,24 @@ export interface IIteratorNode extends INode {
         target: string;            // 要迭代的子节点 ID
         next?: string;             // 迭代完成后的下一个节点
         parallel?: boolean;        // 是否并行处理（高级特性）
+    }
+}
+
+export interface IIntentRecognitionNode extends INode {
+    intentRecognition: {
+        agent: {
+            instructions: string
+            model: string
+        }
+        input: {
+            data: Input
+        }
+        intentions: Array<{
+            name: string
+            target: string
+        }>
+        defaultTarget?: string
+        outputKey?: string
     }
 }
 
