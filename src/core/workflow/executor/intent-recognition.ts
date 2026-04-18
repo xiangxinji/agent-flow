@@ -46,7 +46,7 @@ export class IntentRecognitionExecutor extends BaseExecutor {
     async execute(node: ExecutorNode, runtime: ExecutorRuntime): Promise<Record<string, any>> {
         try {
             // 1. 获取输入数据
-            const inputData = EngineStateGetter.getInput(runtime.engineContext.state, this.config.input.data);
+            const inputData = EngineStateGetter.getInput<{ data: any }>(runtime.engineContext.state, { data: this.config.input.data });
             
             // 2. 使用 Agent 分析输入并识别意图
             const { instructions, model } = this.config.agent;
@@ -93,7 +93,7 @@ ${JSON.stringify(inputData, null, 2)}
             
             // 错误处理：返回错误信息
             return {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
                 target: this.config.defaultTarget
             };
         }

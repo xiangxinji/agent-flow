@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import { EngineStateManager } from "@/core/workflow/engine/state";
 
 export class EngineStateGetter {
-    static getInput<T>(state: EngineStateManager, input: Record<string, Input>): T {
+    static getInput<T>(state: EngineStateManager, input: Record<string, Input | string>): T {
         const result = {} as Record<string, any>;
 
 
@@ -13,8 +13,8 @@ export class EngineStateGetter {
             /**
              * 引用其它节点上的 output 
              */
-            if (item.type === 'ref') {
-                const [nodeId, ...restPath] = item.path.split('.');
+            if (typeof item === 'string' || item.type === 'ref') {
+                const [nodeId, ...restPath] = (typeof item === 'string' ? item : item.path).split('.');
                 const nodeOutput = state.getState(nodeId);
 
 

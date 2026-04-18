@@ -16,17 +16,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { GraphNodeType } from '@/types/workflow'
+import { ref, onMounted } from 'vue'
+import type { GraphNodeType, NodeTypeInfo, ApiResponse } from '@/types/workflow'
 
-const nodeTypes = ref([
-  { type: 'agent' as GraphNodeType, label: '智能代理', icon: '🤖' },
-  { type: 'function-call' as GraphNodeType, label: '函数调用', icon: '⚡' },
-  { type: 'branch' as GraphNodeType, label: '分支', icon: '🔀' },
-  { type: 'iterator' as GraphNodeType, label: '迭代器', icon: '🔄' },
-  { type: 'parallel' as GraphNodeType, label: '并行', icon: '⚡' },
-  { type: 'intent-recognition' as GraphNodeType, label: '意图识别', icon: '🎯' }
-])
+const nodeTypes = ref<NodeTypeInfo[]>([])
+
+const fetchNodeTypes = async () => {
+  try {
+    const response = await fetch('/api/node/findAll')
+    const result: ApiResponse<NodeTypeInfo[]> = await response.json()
+    if (result.success) {
+      nodeTypes.value = result.data
+    }
+  } catch (error) {
+    console.error('Failed to fetch node types:', error)
+  }
+}
 
 const onDragStart = (event: DragEvent, nodeType: GraphNodeType) => {
   if (event.dataTransfer) {
@@ -34,6 +39,10 @@ const onDragStart = (event: DragEvent, nodeType: GraphNodeType) => {
     event.dataTransfer.effectAllowed = 'move'
   }
 }
+
+onMounted(() => {
+  fetchNodeTypes()
+})
 </script>
 
 <style scoped>

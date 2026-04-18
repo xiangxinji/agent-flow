@@ -1,5 +1,20 @@
 export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'function-call' | 'intent-recognition'
 
+export interface NodeTypeInfo {
+  type: GraphNodeType
+  label: string
+  icon: string
+  color: string
+  description: string
+  configSchema: Record<string, any>
+}
+
+export interface ApiResponse<T> {
+  success: boolean
+  data: T
+  message: string
+}
+
 export interface IFlow {
   id: string
   name: string

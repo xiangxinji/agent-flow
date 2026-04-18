@@ -17,12 +17,13 @@ export function createMastraInstance() {
 type MastraAgentConfig = {
   id: string
   instructions: string;
+  model?: string;
 }
-export function createMastraAgent({ id, instructions }: MastraAgentConfig) {
+export function createMastraAgent({ id, instructions, model }: MastraAgentConfig) {
   return new Agent({
     id,
     name: 'NodeExecutorAgent',
     instructions,
-    model: 'deepseek/deepseek-chat'
+    model: model || 'deepseek/deepseek-chat'
   })
 }
