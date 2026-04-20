@@ -5,7 +5,7 @@
     "lib": ["ES2022"],
     "types": ["node"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -18,10 +18,11 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@server/*": ["server/*"]
     },
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "server/**/*"],
   "exclude": ["node_modules", "dist"]
 }

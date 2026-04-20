@@ -2,7 +2,12 @@
   <div class="config">
     <div class="field">
       <label>函数</label>
-      <input type="text" v-model="localConfig.fnName" @input="updateConfig" placeholder="函数名称..." />
+      <select v-model="localConfig.fnName" @change="updateConfig">
+        <option value="">请选择函数</option>
+        <option v-for="func in functions" :key="func.code" :value="func.code">
+          {{ func.name }}
+        </option>
+      </select>
     </div>
     <div class="field">
       <label>输入</label>
@@ -12,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useWorkflowStore } from '@/stores/workflow'
 import type { IFunctionCallNode } from '@/types/workflow'
 
@@ -25,6 +30,19 @@ const localConfig = ref({
 })
 
 const inputJson = ref(JSON.stringify(localConfig.value.input, null, 2))
+const functions = ref<Array<{ name: string, code: string }>>([])
+
+const fetchFunctions = async () => {
+  try {
+    const response = await fetch('/api/function/findAll')
+    const result = await response.json()
+    if (result.success) {
+      functions.value = result.data
+    }
+  } catch (error) {
+    console.error('Failed to fetch functions:', error)
+  }
+}
 
 const updateConfig = () => {
   workflowStore.updateNode(props.node.id, { function: { ...localConfig.value } })
@@ -44,6 +62,10 @@ watch(() => props.node, (n) => {
     inputJson.value = JSON.stringify(n.function.input, null, 2)
   }
 }, { deep: true })
+
+onMounted(() => {
+  fetchFunctions()
+})
 </script>
 
 <style scoped>
@@ -65,6 +87,7 @@ watch(() => props.node, (n) => {
 }
 
 .field input,
+.field select,
 .field textarea {
   width: 100%;
   padding: 0.5rem;

@@ -1,15 +1,10 @@
-import { ExecutorFunction } from "./base";
-import { ToJsonConvertFunction } from "./data/to-json";
-import { LogFunction } from "./tool/log";
-import { FetchFunction } from "./utils/fetch";
+import  { ExecutorFunction } from "./base";
 
 
 export class FunctionRegistry {
     private functionInstances = new Map<string, ExecutorFunction<any, any>>();
 
     constructor() {
-        this.register(new ToJsonConvertFunction());
-        this.register(new LogFunction());
     }
 
     register(functionInstance: ExecutorFunction<any, any>) {
@@ -28,12 +23,16 @@ export class FunctionRegistry {
         return fun.execute(input);
     }
 
+    getAllFunctions() {
+        const functions: Array<{ name: string, code: string }> = [];
+        for (const [name, instance] of this.functionInstances.entries()) {
+            functions.push({
+                name : instance.description,
+                code: name
+            });
+        }
+        return functions;
+    }
+
 }
 
-
-
-export const functionRegistry = new FunctionRegistry();
-
-functionRegistry.register(new FetchFunction());
-functionRegistry.register(new LogFunction());
-functionRegistry.register(new ToJsonConvertFunction());

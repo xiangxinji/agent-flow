@@ -52,7 +52,7 @@ export class IntentRecognitionNode extends BaseNode {
 
         try {
             // 1. 获取输入数据
-            const inputData = EngineStateGetter.getInput(ctx.engine.state.getAll(), this.intentRecognition.input.data);
+            const inputData = EngineStateGetter.getInput(ctx.engine.state, { data: this.intentRecognition.input.data });
             
             // 2. 使用 Agent 分析输入并识别意图
             const { instructions, model } = this.intentRecognition.agent;

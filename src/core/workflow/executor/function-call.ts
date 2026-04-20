@@ -2,7 +2,6 @@
 
 
 import { ENGINE_STAGE } from "@/core/enums/engine";
-import { functionRegistry } from "../../../function";
 import { ExecutorNode } from "../node/executor";
 import { ExecutorRuntime } from "../runtime";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
@@ -37,7 +36,7 @@ export class FunctionCallExecutor extends BaseExecutor {
             return {
             }
         }
-        const output = functionRegistry.call(this.function.fnName, input);
+        const output = runtime.engineContext.engine.functionRegistry.call(this.function.fnName, input);
         runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.function]);
         return output
     }

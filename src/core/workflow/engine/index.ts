@@ -7,6 +7,9 @@ import { EventManager } from "@/utils/event-manager";
 import { ENGINE_STAGE } from "@/core/enums/engine";
 import type { Mastra } from "@mastra/core";
 import { createMastraInstance } from "../../../mastra/index";
+import { FlowPlugin } from "@/core/plugins";
+import { FunctionRegistry } from "@/function";
+import { BasePlugin } from "@/core/plugins/base";
 
 
 
@@ -26,7 +29,18 @@ export class WorkflowEngine {
 
     public mastra: Mastra;
 
-    constructor(public workflow: Workflow, { history, event } = { history: true, event: true }) {
+    public plugins: FlowPlugin[] = [
+        new BasePlugin()
+    ];
+
+    /**
+     * 函数注册器
+     */
+    public functionRegistry = new FunctionRegistry();
+
+    constructor(public workflow: Workflow, { history, event, plugins = [] } = { history: true, event: true }) {
+        this.plugins = plugins;
+        this.plugins.forEach(plugin => plugin.apply(this));
         this.state = new EngineStateManager();
         if (history) {
             this.history = new WorkflowHistory(this);
@@ -106,6 +120,7 @@ export class WorkflowEngine {
     emit(stage: ENGINE_STAGE, ...args: any[]) {
         this.event?.emit(stage, ...args);
     }
+
 
 
 }

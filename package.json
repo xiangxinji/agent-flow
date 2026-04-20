@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "tsc",
-    "start": "ts-node -r tsconfig-paths/register src/api/server.ts",
-    "server": "ts-node -r tsconfig-paths/register src/api/server.ts",
+    "start:app" : "cd app && pnpm dev",
+    "start:server": "ts-node -r tsconfig-paths/register server/server.ts",
     "test": "ts-node -r tsconfig-paths/register examples/tests/run-all-tests.ts",
     "test:watch": "nodemon --exec ts-node -r tsconfig-paths/register examples/tests/run-all-tests.ts",
     "test:specific": "ts-node -r tsconfig-paths/register examples/tests/test-runner.ts",

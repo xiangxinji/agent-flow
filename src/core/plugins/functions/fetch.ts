@@ -1,4 +1,4 @@
-import { ExecutorFunction } from "../base";
+import { ExecutorFunction } from "../../../function/base";
 
 export type FetchInput = {
     url: string;
@@ -9,7 +9,7 @@ export type FetchInput = {
 
 export class FetchFunction extends ExecutorFunction<FetchInput, any> {
     constructor() {
-        super('utils.fetch');
+        super('utils.fetch' , '执行 HTTP 请求');
     }
 
     async execute(input: FetchInput): Promise<any> {
