@@ -17,7 +17,7 @@ export class NodeFactory {
         const metadata = node.metadata || {};
         const attrs = node.attrs || {};
         const base = { id, metadata, attrs };
-        if ((['agent', 'function-call' , 'intent-recognition'] as GraphNodeType[]).includes(node.type as GraphNodeType)) {
+        if ((['agent', 'tool' , 'intent-recognition'] as GraphNodeType[]).includes(node.type as GraphNodeType)) {
             return new ExecutorNode({ ...base, executor: ExecutorFactory.create(node.type as GraphNodeType, node) });
         } else if (node.type === 'branch') {
             const _node = node as IBranchNode;

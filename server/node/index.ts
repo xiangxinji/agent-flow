@@ -27,13 +27,13 @@ nodeApi.get('/findAll', (c) => {
       }
     },
     {
-      type: 'function-call',
-      label: '函数调用',
-      icon: '⚡',
+      type: 'tool',
+      label: '工具调用',
+      icon: '🔧',
       color: '#f59e0b',
-      description: '函数调用节点，用于执行工具函数',
+      description: '工具调用节点，用于执行工具函数',
       configSchema: {
-        fnName: { type: 'string', required: true, label: '函数名称' },
+        name: { type: 'string', required: true, label: '工具名称' },
         input: { type: 'object', required: true, label: '输入参数' }
       }
     },

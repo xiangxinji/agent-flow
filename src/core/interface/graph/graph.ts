@@ -3,7 +3,7 @@ import { Input } from "./input"
 /**
  * 前端配置的节点类型
  */
-export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'function-call' | 'intent-recognition'
+export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'tool' | 'intent-recognition'
 
 
 export interface IFlow {
@@ -26,9 +26,9 @@ export interface INode {
 }
 
 
-export interface IFunctionCallNode extends INode {
-    function: {
-        fnName: string
+export interface IToolNode extends INode {
+    tool: {
+        name: string
         input: Record<string, Input>
     }
 }

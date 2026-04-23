@@ -18,7 +18,7 @@ The system SHALL provide a visual canvas for workflow editing using VueFlow.
 - **THEN** the system SHALL support zooming, panning, and selection
 
 ### Requirement: Node Types Support
-The system SHALL support all existing node types: agent, branch, iterator, parallel, function-call, and intent-recognition.
+The system SHALL support all existing node types: agent, branch, iterator, parallel, tool, and intent-recognition.
 
 #### Scenario: Node Type Display
 - **WHEN** a node is added to the canvas

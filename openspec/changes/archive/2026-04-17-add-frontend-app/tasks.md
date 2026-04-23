@@ -32,7 +32,7 @@
 
 - [x] 4.1 Create ConfigurationPanel component
 - [x] 4.2 Create AgentNodeConfig component for agent node configuration
-- [x] 4.3 Create FunctionCallNodeConfig component for function call node configuration
+- [x] 4.3 Create ToolNodeConfig component for tool node configuration
 - [x] 4.4 Create BranchNodeConfig component for branch node configuration
 - [x] 4.5 Create IteratorNodeConfig component for iterator node configuration
 - [x] 4.6 Create ParallelNodeConfig component for parallel node configuration

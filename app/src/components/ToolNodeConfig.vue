@@ -1,11 +1,11 @@
 <template>
   <div class="config">
     <div class="field">
-      <label>函数</label>
-      <select v-model="localConfig.fnName" @change="updateConfig">
-        <option value="">请选择函数</option>
-        <option v-for="func in functions" :key="func.code" :value="func.code">
-          {{ func.name }}
+      <label>工具</label>
+      <select v-model="localConfig.name" @change="updateConfig">
+        <option value="">请选择工具</option>
+        <option v-for="tool in tools" :key="tool.code" :value="tool.code">
+          {{ tool.name }}
         </option>
       </select>
     </div>
@@ -19,33 +19,33 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useWorkflowStore } from '@/stores/workflow'
-import type { IFunctionCallNode } from '@/types/workflow'
+import type { IToolNode } from '@/types/workflow'
 
-const props = defineProps<{ node: IFunctionCallNode }>()
+const props = defineProps<{ node: IToolNode }>()
 const workflowStore = useWorkflowStore()
 
 const localConfig = ref({
-  fnName: props.node.function?.fnName || '',
-  input: props.node.function?.input || {}
+  name: props.node.tool?.name || '',
+  input: props.node.tool?.input || {}
 })
 
 const inputJson = ref(JSON.stringify(localConfig.value.input, null, 2))
-const functions = ref<Array<{ name: string, code: string }>>([])
+const tools = ref<Array<{ name: string, code: string }>>([])
 
-const fetchFunctions = async () => {
+const fetchTools = async () => {
   try {
     const response = await fetch('/api/function/findAll')
     const result = await response.json()
     if (result.success) {
-      functions.value = result.data
+      tools.value = result.data
     }
   } catch (error) {
-    console.error('Failed to fetch functions:', error)
+    console.error('Failed to fetch tools:', error)
   }
 }
 
 const updateConfig = () => {
-  workflowStore.updateNode(props.node.id, { function: { ...localConfig.value } })
+  workflowStore.updateNode(props.node.id, { tool: { ...localConfig.value } })
 }
 
 const updateInputConfig = () => {
@@ -56,15 +56,15 @@ const updateInputConfig = () => {
 }
 
 watch(() => props.node, (n) => {
-  if (n.function) {
-    localConfig.value.fnName = n.function.fnName
-    localConfig.value.input = n.function.input
-    inputJson.value = JSON.stringify(n.function.input, null, 2)
+  if (n.tool) {
+    localConfig.value.name = n.tool.name
+    localConfig.value.input = n.tool.input
+    inputJson.value = JSON.stringify(n.tool.input, null, 2)
   }
 }, { deep: true })
 
 onMounted(() => {
-  fetchFunctions()
+  fetchTools()
 })
 </script>
 

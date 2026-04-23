@@ -70,9 +70,9 @@ npm run build
   "nodes": [
     {
       "id": "start",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -157,9 +157,9 @@ functionRegistry.register('myFunction', (input) => {
 ```json
 {
   "id": "executor-1",
-  "type": "function-call",
-  "function": {
-    "fnName": "tool.log",
+  "type": "tool",
+  "tool": {
+    "name": "tool.log",
     "input": {
       "input": {
         "type": "literal",
@@ -278,9 +278,9 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -291,9 +291,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "process",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.toJson",
+      "type": "tool",
+      "tool": {
+        "name": "tool.toJson",
         "input": {
           "input": {
             "type": "literal",
@@ -304,9 +304,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "end",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -334,9 +334,9 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -364,9 +364,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "greater-than-5",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -377,9 +377,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "less-than-or-equal-5",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -390,9 +390,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "end",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -423,9 +423,9 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -444,9 +444,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "branch-1",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -457,9 +457,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "branch-2",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -470,9 +470,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "end",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -503,9 +503,9 @@ functionRegistry.register('myFunction', (input) => {
   "nodes": [
     {
       "id": "start",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",
@@ -531,9 +531,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "process-item",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "ref",
@@ -544,9 +544,9 @@ functionRegistry.register('myFunction', (input) => {
     },
     {
       "id": "end",
-      "type": "function-call",
-      "function": {
-        "fnName": "tool.log",
+      "type": "tool",
+      "tool": {
+        "name": "tool.log",
         "input": {
           "input": {
             "type": "literal",

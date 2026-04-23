@@ -16,7 +16,7 @@
 - 使用 Vite 作为构建工具，提供快速的开发体验
 - 使用 Vue 3 + TypeScript 开发现代化的前端应用
 - 集成 VueFlow 库，实现工作流可视化编辑功能
-- 支持所有现有节点类型的可视化编辑（agent, branch, iterator, parallel, function-call, intent-recognition）
+- 支持所有现有节点类型的可视化编辑（agent, branch, iterator, parallel, tool, intent-recognition）
 - 提供节点配置面板，支持可视化配置节点参数
 - 支持工作流的导入导出功能（JSON 格式）
 - 实时预览工作流结构

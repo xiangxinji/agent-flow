@@ -20,7 +20,7 @@
 
 1. **DSL 层** (`src/interface/graph/`)
    - 定义 Flow DSL 结构，包含节点和边
-   - 节点类型：`agent`、`branch`、`iterator`、`parallel`、`subgraph`、`function-call`
+   - 节点类型：`agent`、`branch`、`iterator`、`parallel`、`subgraph`、`tool`
    - 支持的输入类型：`literal`（字面量）、`ref`（节点输出引用）、`template`（模板）
 
 2. **工作流核心** (`src/core/workflow/`)
@@ -42,7 +42,7 @@
 
 5. **工厂模式** (`src/core/factory/`)
    - `NodeFactory`：从 DSL 定义创建节点实例
-   - `ExecutorFactory`：创建执行器实例（agent、function-call）
+   - `ExecutorFactory`：创建执行器实例（agent、tool）
 
 6. **函数注册表** (`src/function/`)
    - `FunctionRegistry`：可执行函数的注册表

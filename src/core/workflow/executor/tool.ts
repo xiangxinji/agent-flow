@@ -1,6 +1,7 @@
 
 
 
+
 import { ENGINE_STAGE } from "@/core/enums/engine";
 import { ExecutorNode } from "../node/executor";
 import { ExecutorRuntime } from "../runtime";
@@ -10,35 +11,35 @@ import { Input } from "@/core/interface/graph/input";
 import { CommonInput } from "@/function/base";
 
 
-type FunctionCallExecutorConfig = Omit<{
-    function: {
-        fnName: string
+type ToolExecutorConfig = Omit<{
+    tool: {
+        name: string
         input: Record<string, Input>
     }
 } & BaseExecutorConfig, 'type'>
 
-export class FunctionCallExecutor extends BaseExecutor {
+export class ToolExecutor extends BaseExecutor {
 
-    private function: {
-        fnName: string
+    private tool: {
+        name: string
         input: Record<string, Input>
     };
 
-    constructor(config: FunctionCallExecutorConfig) {
-        super({ ...config, type: 'function-call' });
-        this.function = config.function;
+    constructor(config: ToolExecutorConfig) {
+        super({ ...config, type: 'tool' });
+        this.tool = config.tool;
     }
 
     async execute(node: ExecutorNode, runtime: ExecutorRuntime) {
-        const input = EngineStateGetter.getInput<CommonInput>(runtime.engineContext.state, this.function.input)
-        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_START, [this.function]);
-        if (!this.function.fnName) {
+        const input = EngineStateGetter.getInput<CommonInput>(runtime.engineContext.state, this.tool.input)
+        runtime.engineContext.engine.emit(ENGINE_STAGE.TOOL_START, [this.tool]);
+        if (!this.tool.name) {
             return {
             }
         }
 
-        const output = runtime.engineContext.engine.functionRegistry.call(this.function.fnName, input);
-        runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.function]);
+        const output = runtime.engineContext.engine.functionRegistry.call(this.tool.name, input);
+        runtime.engineContext.engine.emit(ENGINE_STAGE.TOOL_END, [this.tool]);
         return output
     }
 }

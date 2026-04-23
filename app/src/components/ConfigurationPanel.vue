@@ -14,7 +14,7 @@
         <input type="text" :value="node.type" disabled />
       </div>
       <AgentNodeConfig v-if="node.type === 'agent'" :node="node" />
-      <FunctionCallNodeConfig v-else-if="node.type === 'function-call'" :node="node" />
+      <ToolNodeConfig v-else-if="node.type === 'tool'" :node="node" />
       <BranchNodeConfig v-else-if="node.type === 'branch'" :node="node" />
       <IteratorNodeConfig v-else-if="node.type === 'iterator'" :node="node" />
       <ParallelNodeConfig v-else-if="node.type === 'parallel'" :node="node" />
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { useWorkflowStore } from '@/stores/workflow'
 import AgentNodeConfig from './AgentNodeConfig.vue'
-import FunctionCallNodeConfig from './FunctionCallNodeConfig.vue'
+import ToolNodeConfig from './ToolNodeConfig.vue'
 import BranchNodeConfig from './BranchNodeConfig.vue'
 import IteratorNodeConfig from './IteratorNodeConfig.vue'
 import ParallelNodeConfig from './ParallelNodeConfig.vue'

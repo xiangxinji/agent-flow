@@ -1,4 +1,4 @@
-export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'function-call' | 'intent-recognition'
+export type GraphNodeType = 'agent' | 'branch' | 'iterator' | 'parallel' | 'tool' | 'intent-recognition'
 
 export interface NodeTypeInfo {
   type: GraphNodeType
@@ -31,9 +31,9 @@ export interface INode {
   attrs?: Record<string, any>
 }
 
-export interface IFunctionCallNode extends INode {
-  function: {
-    fnName: string
+export interface IToolNode extends INode {
+  tool: {
+    name: string
     input: Record<string, Input>
   }
 }

@@ -21,7 +21,7 @@ const props = defineProps<{ data?: INode }>()
 
 const nodeConfig: Record<GraphNodeType, { icon: string; color: string; label: string }> = {
   agent: { icon: '🤖', color: '#42b883', label: '智能代理' },
-  'function-call': { icon: '⚡', color: '#f59e0b', label: '函数调用' },
+  'tool': { icon: '🔧', color: '#f59e0b', label: '工具调用' },
   branch: { icon: '🔀', color: '#8b5cf6', label: '分支' },
   iterator: { icon: '🔄', color: '#ec4899', label: '迭代器' },
   parallel: { icon: '⚡', color: '#06b6d4', label: '并行' },

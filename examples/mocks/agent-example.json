@@ -19,9 +19,9 @@
         },
         {
             "id": "test-2",
-            "type": "function-call",
-            "function": {
-                "fnName": "tool.log",
+            "type": "tool",
+            "tool": {
+                "name": "tool.log",
                 "input": {
                     "input": {
                         "type": "template",

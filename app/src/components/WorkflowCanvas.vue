@@ -32,7 +32,7 @@ const { addEdges } = useVueFlow()
 
 const nodeTypes = {
   agent: markRaw(CustomNode),
-  'function-call': markRaw(CustomNode),
+  'tool': markRaw(CustomNode),
   branch: markRaw(CustomNode),
   iterator: markRaw(CustomNode),
   parallel: markRaw(CustomNode),

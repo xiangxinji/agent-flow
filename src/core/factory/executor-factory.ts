@@ -1,7 +1,7 @@
 import { BaseExecutor } from "../workflow/executor/base";
 import { AgentExecutor } from "../workflow/executor/agent";
-import { IAgentNode, IFunctionCallNode, IIntentRecognitionNode, GraphNodeType, INode } from "@/core/interface/graph/graph";
-import { FunctionCallExecutor } from "../workflow/executor/function-call";
+import { IAgentNode, IToolNode, IIntentRecognitionNode, GraphNodeType, INode } from "@/core/interface/graph/graph";
+import { ToolExecutor } from "../workflow/executor/tool";
 import { IntentRecognitionExecutor } from "../workflow/executor/intent-recognition";
 
 export class ExecutorFactory {
@@ -9,8 +9,8 @@ export class ExecutorFactory {
         if (type === 'agent') {
             return new AgentExecutor({ agent: (node as IAgentNode).agent });
         }
-        if (type === 'function-call') {
-            return new FunctionCallExecutor({ function: (node as IFunctionCallNode).function });
+        if (type === 'tool') {
+            return new ToolExecutor({ tool: (node as IToolNode).tool });
         }
         if (type === 'intent-recognition') {
             return new IntentRecognitionExecutor({ intentRecognition: (node as IIntentRecognitionNode).intentRecognition });

@@ -49,7 +49,7 @@ const onDrop = (event: DragEvent) => {
 const getDefaultNodeConfig = (type: GraphNodeType): Partial<INode> => {
   const configs: Record<GraphNodeType, Partial<INode>> = {
     agent: { agent: { instructions: '', model: 'gpt-3.5-turbo', input: { prompt: '' } } },
-    'function-call': { function: { fnName: '', input: {} } },
+    'tool': { tool: { name: '', input: {} } },
     branch: { branch: { cases: [] } },
     iterator: { iterator: { array: '', target: '' } },
     parallel: { parallel: { branches: [] } },

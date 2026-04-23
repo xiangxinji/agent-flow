@@ -5,9 +5,9 @@
     "nodes": [
         {
             "id": "test-1",
-            "type": "function-call",
-            "function": {
-                "fnName": "utils.fetch",
+            "type": "tool",
+            "tool": {
+                "name": "utils.fetch",
                 "input": {
                     "url": {
                         "type": "ref",
@@ -23,9 +23,9 @@
         ,
         {
             "id": "test-2",
-            "type": "function-call",
-            "function": {
-                "fnName": "tool.log",
+            "type": "tool",
+            "tool": {
+                "name": "tool.log",
                 "input": {
                     "input": {
                         "type": "ref",

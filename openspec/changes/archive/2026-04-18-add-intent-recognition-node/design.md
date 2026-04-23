@@ -10,7 +10,7 @@
 
 ### Technical Context
 - Project uses TypeScript, Node.js, and Mastra for agent capabilities
-- Existing node types: agent, branch, iterator, parallel, function-call
+- Existing node types: agent, branch, iterator, parallel, tool
 - State management system exists for passing data between nodes
 - Agent execution capability already available through Mastra integration
 

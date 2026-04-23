@@ -5,7 +5,7 @@
 ### Current State
 - 项目当前只有后端工作流引擎，缺少前端可视化界面
 - 用户通过手动编写 JSON 配置文件来定义工作流
-- 存在多种节点类型：agent, branch, iterator, parallel, function-call, intent-recognition
+- 存在多种节点类型：agent, branch, iterator, parallel, tool, intent-recognition
 - 工作流配置存储在 `examples/mocks/` 目录中
 
 ### Technical Context
