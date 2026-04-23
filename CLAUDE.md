@@ -10,10 +10,9 @@
 
 - `npm run dev` - 使用 ts-node 在开发模式下运行
 - `npm run build` - 将 TypeScript 编译到 dist/ 目录
-- `npm run server` 或 `npm start` - 启动 HTTP API 服务器（默认端口 3000）
-- `npm run type-check` - 对 TypeScript 进行类型检查而不生成文件
+- `npm run start:app` - 启动前端应用
+- `npm run start:server` - 启动 HTTP API 服务器（默认端口 3000）
 
-项目使用 TypeScript 并配置了路径别名（`@/*` 映射到 `src/*`），在开发时需要 `tsconfig-paths` 包来正确解析路径。
 
 ## 架构
 
