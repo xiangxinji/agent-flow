@@ -1,16 +1,16 @@
 import { WorkflowPlugin } from "@/index";
 import { WorkflowEngine } from "../workflow/engine";
-import { ToJsonConvertFunction } from "./functions/to-json";
-import { LogFunction } from "./functions/log";
-import { FetchFunction } from "./functions/fetch";
+import { ToJsonConvertFunction } from "./tools/to-json";
+import { LogFunction } from "./tools/log";
+import { FetchFunction } from "./tools/fetch";
 
 
 
-export class BasePlugin implements WorkflowPlugin {
-    name = 'base';
-    description = '预设插件';
-    functions = [new ToJsonConvertFunction(), new LogFunction(), new FetchFunction()];
+export class CommonPlugin implements WorkflowPlugin {
+    name = 'common';
+    description = '常用工具插件';
+    tools = [new ToJsonConvertFunction(), new LogFunction(), new FetchFunction()];
     apply(engine: WorkflowEngine) {
-        this.functions.forEach(func => engine.functionRegistry.register(func));
+        this.tools.forEach(func => engine.functionRegistry.register(func));
     }
 }

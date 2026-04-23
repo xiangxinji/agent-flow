@@ -1,17 +1,17 @@
-import  { ExecutorFunction } from "./base";
+import  { ToolExecutor } from "./base";
 
 
 export class FunctionRegistry {
-    private functionInstances = new Map<string, ExecutorFunction<any, any>>();
+    private functionInstances = new Map<string, ToolExecutor<any, any>>();
 
     constructor() {
     }
 
-    register(functionInstance: ExecutorFunction<any, any>) {
+    register(functionInstance: ToolExecutor<any, any>) {
         this.functionInstances.set(functionInstance.name, functionInstance);
     }
 
-    getFunctionInstance(name: string): ExecutorFunction<any, any> | undefined {
+    getFunctionInstance(name: string): ToolExecutor<any, any> | undefined {
         return this.functionInstances.get(name);
     }
 

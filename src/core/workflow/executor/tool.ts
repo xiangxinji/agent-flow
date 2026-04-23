@@ -8,7 +8,7 @@ import { ExecutorRuntime } from "../runtime";
 import { BaseExecutor, BaseExecutorConfig } from "./base";
 import { EngineStateGetter } from "@/utils/state-parser";
 import { Input } from "@/core/interface/graph/input";
-import { CommonInput } from "@/function/base";
+import { CommonInput } from "@/tools/base";
 
 
 type ToolExecutorConfig = Omit<{

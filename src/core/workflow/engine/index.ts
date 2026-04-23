@@ -8,8 +8,8 @@ import { ENGINE_STAGE } from "@/core/enums/engine";
 import type { Mastra } from "@mastra/core";
 import { createMastraInstance } from "../../../mastra/index";
 import { WorkflowPlugin } from "@/core/plugins";
-import { FunctionRegistry } from "@/function";
-import { BasePlugin } from "@/core/plugins/base";
+import { FunctionRegistry } from "@/tools";
+import { CommonPlugin } from "@/core/plugins/base";
 
 
 
@@ -30,7 +30,7 @@ export class WorkflowEngine {
     public mastra: Mastra;
 
     public plugins: WorkflowPlugin[] = [
-        new BasePlugin()
+        new CommonPlugin()
     ];
 
     /**

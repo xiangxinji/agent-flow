@@ -3,7 +3,7 @@
 
 export type CommonInput = { input: string }
 
-export abstract class ExecutorFunction<Input,Output> {
+export abstract class ToolExecutor<Input,Output> {
 
     
     constructor(public name: string  , public description: string) {

@@ -1,4 +1,4 @@
-import { ExecutorFunction } from "../../../function/base";
+import { ToolExecutor } from "../../../tools/base";
 
 export type FetchInput = {
     url: string;
@@ -7,7 +7,7 @@ export type FetchInput = {
     responseType ?: 'json' | 'text';
 };
 
-export class FetchFunction extends ExecutorFunction<FetchInput, any> {
+export class FetchFunction extends ToolExecutor<FetchInput, any> {
     constructor() {
         super('utils.fetch' , '执行 HTTP 请求');
     }

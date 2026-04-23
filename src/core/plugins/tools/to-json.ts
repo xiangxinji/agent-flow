@@ -1,6 +1,6 @@
-import { CommonInput, ExecutorFunction } from "@/function/base";
+import { CommonInput, ToolExecutor } from "@/tools/base";
 
-export class ToJsonConvertFunction extends ExecutorFunction<CommonInput, any> {
+export class ToJsonConvertFunction extends ToolExecutor<CommonInput, any> {
     constructor() {
         super('data.to-json', '将字符串转换为 JSON 对象');
     }

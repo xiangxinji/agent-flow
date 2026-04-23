@@ -1,6 +1,6 @@
-import { CommonInput, ExecutorFunction } from "../../../function/base";
+import { CommonInput, ToolExecutor } from "../../../tools/base";
 
-export class LogFunction extends ExecutorFunction<CommonInput, void> {
+export class LogFunction extends ToolExecutor<CommonInput, void> {
     constructor() {
         super('tool.log' , '打印日志');
     }
