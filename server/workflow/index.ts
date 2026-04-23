@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { GraphBuilder } from '@/core/graph/builder';
 import { WorkflowEngine } from '@/core/workflow/engine';
-import { BasePlugin } from '@/core/plugins/base'
+import { CommonPlugin } from '@/core/plugins/base'
 const workflowApi: Hono = new Hono();
 
 // 运行工作流接口
@@ -23,7 +23,7 @@ workflowApi.post('/run', async (c) => {
       history: true,
       event: true,
       plugins: [
-        new BasePlugin()
+        new CommonPlugin()
       ]
     });
 
