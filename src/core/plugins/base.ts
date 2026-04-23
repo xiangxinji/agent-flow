@@ -10,6 +10,7 @@ export class BasePlugin implements FlowPlugin {
     name = 'base';
     description = '预设插件';
     functions = [new ToJsonConvertFunction(), new LogFunction(), new FetchFunction()];
-    apply() {
+    apply(engine: WorkflowEngine) {
+        this.functions.forEach(func => engine.functionRegistry.register(func));
     }
 }

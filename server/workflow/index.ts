@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { GraphBuilder } from '@/core/graph/builder';
 import { WorkflowEngine } from '@/core/workflow/engine';
+import { BasePlugin } from '@/core/plugins/base'
 const workflowApi: Hono = new Hono();
 
 // 运行工作流接口
@@ -18,7 +19,13 @@ workflowApi.post('/run', async (c) => {
     });
 
     const workflow = builder.build();
-    const engine = new WorkflowEngine(workflow);
+    const engine = new WorkflowEngine(workflow , { 
+      history: true,
+      event: true,
+      plugins: [
+        new BasePlugin()
+      ]
+    });
 
     // 运行工作流
     const result = await engine.run(body.input || {});

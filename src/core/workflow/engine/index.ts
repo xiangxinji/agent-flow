@@ -38,7 +38,7 @@ export class WorkflowEngine {
      */
     public functionRegistry = new FunctionRegistry();
 
-    constructor(public workflow: Workflow, { history, event, plugins = [] } = { history: true, event: true }) {
+    constructor(public workflow: Workflow, { history, event, plugins } = { history: true, event: true, plugins: [] as FlowPlugin[] }) {
         this.plugins = plugins;
         this.plugins.forEach(plugin => plugin.apply(this));
         this.state = new EngineStateManager();
@@ -103,7 +103,10 @@ export class WorkflowEngine {
      * @returns 克隆的引擎实例
      */
     public clone() {
-        const newEngine = new WorkflowEngine(this.workflow, { history: false, event: false });
+        const newEngine = new WorkflowEngine(this.workflow, {
+            history: false, event: false, plugins
+                : this.plugins
+        });
         /**
          * 多个 engine 共享同一个 history 和 event 实例
          */

@@ -36,6 +36,7 @@ export class FunctionCallExecutor extends BaseExecutor {
             return {
             }
         }
+
         const output = runtime.engineContext.engine.functionRegistry.call(this.function.fnName, input);
         runtime.engineContext.engine.emit(ENGINE_STAGE.FUNCTION_CALL_END, [this.function]);
         return output
